@@ -23,35 +23,32 @@ import gov.naco.soch.projection.PlaceholderProjection;
 @RestController
 @RequestMapping("/event")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-public class NotificationController {
-	
+public class NotificationConfigurationController {
+
 	@Autowired
 	private NotificationService notificationService;
 
-	private static final Logger logger = LoggerFactory.getLogger(NotificationController.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(NotificationConfigurationController.class);
+
 	@GetMapping("/list")
-	public List<NotificationEventProjection> getEventList()
-	{
+	public List<NotificationEventProjection> getEventList() {
 		logger.debug("Entered getEventList Method ");
 		return notificationService.getEventList();
-		
+
 	}
+
 	@GetMapping("/placeholders/{eventId}")
-	public List<PlaceholderProjection> getPlaceHoldersForTheEvent(@PathVariable Long eventId)
-	{
+	public List<PlaceholderProjection> getPlaceHoldersForTheEvent(@PathVariable Long eventId) {
 		logger.debug("Entered getPlaceHoldersForTheEvent Method ");
 		return notificationService.getPlaceHoldersForTheEvent(eventId);
 	}
-	
+
 	@PostMapping("/save")
-	public boolean saveEvent(@Valid @RequestBody NotificationEventSaveDto notificationEventSaveDto)
-	{
+	public boolean saveEvent(@Valid @RequestBody NotificationEventSaveDto notificationEventSaveDto) {
 		logger.debug("Entered saveEvent Method ");
 		notificationService.saveEvent(notificationEventSaveDto);
 		return true;
-		
+
 	}
-	
 
 }
