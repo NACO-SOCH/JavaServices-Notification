@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import gov.naco.soch.dto.NotificationEventSaveDto;
 import gov.naco.soch.entity.NotificationEvent;
 import gov.naco.soch.notification.mapper.NotificationMapper;
+import gov.naco.soch.notification.sender.EmailSenderService;
 import gov.naco.soch.notification.sender.SmsSenderService;
 import gov.naco.soch.notification.sender.WhatsAppSenderService;
 import gov.naco.soch.projection.NotificationEventProjection;
@@ -36,6 +37,8 @@ public class NotificationService {
 	private SmsSenderService smsService;
 	@Autowired
 	private WhatsAppSenderService whatsAppService;
+	@Autowired
+	private EmailSenderService emailService;
 
 	private static final String ANGLE_BRACKET_OPEN = "[";
 	private static final String ANGLE_BRACKET_CLOSED = "]";
@@ -70,8 +73,7 @@ public class NotificationService {
 			String finalEmailTemplate = replacePlaceHolders(detail.getEmailTemplate(), placeholderMap,
 					detail.getRecepient(), placeholders);
 			System.out.println(finalEmailTemplate);
-			// TODO
-			// emailSendService.sendEmail(detail.getEmailId(),detail.getEmailSubject(),finalEmailTemplate);
+			//emailService.sendEmail(detail.getEmailId(),detail.getEmailSubject(),finalEmailTemplate);
 		});
 
 	}
