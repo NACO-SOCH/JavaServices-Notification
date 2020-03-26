@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import gov.naco.soch.dto.NotificationEventSaveDto;
 import gov.naco.soch.entity.NotificationEvent;
 import gov.naco.soch.notification.mapper.NotificationMapper;
+import gov.naco.soch.notification.sender.SmsSenderService;
+import gov.naco.soch.notification.sender.WhatsAppSenderService;
 import gov.naco.soch.projection.NotificationEventProjection;
 import gov.naco.soch.projection.NotificationProjection;
 import gov.naco.soch.projection.PlaceholderProjection;
@@ -30,6 +32,10 @@ public class NotificationService {
 	private NotificationEventRepository notificationEventRepository;
 	@Autowired
 	private NotificationEventPlaceholderRepository notificationEventPlaceholderRepository;
+	@Autowired
+	private SmsSenderService smsService;
+	@Autowired
+	private WhatsAppSenderService whatsAppService;
 
 	private static final String ANGLE_BRACKET_OPEN = "[";
 	private static final String ANGLE_BRACKET_CLOSED = "]";
@@ -81,8 +87,7 @@ public class NotificationService {
 			String finalSmsTemplate = replacePlaceHolders(detail.getSmsTemplate(), placeholderMap,
 					detail.getRecepient(), placeholders);
 			System.out.println(finalSmsTemplate);
-			// TODO
-			// smsSendService.sendSms(detail.getMobileNumber(),finalSmsTemplate);
+			//smsService.sendSms(detail.getMobileNumber(),finalSmsTemplate);
 		});
 
 	}
@@ -98,8 +103,7 @@ public class NotificationService {
 			String finalWhatsappTemplate = replacePlaceHolders(detail.getWhatsappTemplate(), placeholderMap,
 					detail.getRecepient(), placeholders);
 			System.out.println(finalWhatsappTemplate);
-			// TODO
-			// whatsappSendService.sendWhatsapp(detail.getMobileNumber(),finalWhatsappTemplate);
+			//whatsAppService.sendWhatsApp(detail.getMobileNumber(),finalWhatsappTemplate);
 		});
 
 	}

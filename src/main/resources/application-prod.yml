@@ -20,3 +20,8 @@ logging:
        org.springframework: ERROR
        com.naco.soch: ERROR
        org.hibernate: ERROR
+twilio:
+       sid: AC06bf9a190b603076e7b228119042087e
+       token: 888ef6252b95646ffbbed63049714672
+       smsnumber: "+12018014539"
+       whatsappnumber: "+14155238886"
