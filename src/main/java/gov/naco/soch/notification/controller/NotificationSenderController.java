@@ -28,5 +28,18 @@ public class NotificationSenderController {
 		notificationService.sendEmail(placeholderMap, eventId);
 		return true;
 	}
+	
+	@PostMapping("/sendsms/{eventId}")
+	public boolean sendSms(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
+		logger.debug("Entered sendSms Method");
+		notificationService.sendSms(placeholderMap, eventId);
+		return true;
+	}
 
+	@PostMapping("/sendwhatsapp/{eventId}")
+	public boolean sendWhatsapp(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
+		logger.debug("Entered sendWhatsapp Method");
+		notificationService.sendWhatsapp(placeholderMap, eventId);
+		return true;
+	}
 }

@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 import gov.naco.soch.dto.NotificationEventSaveDto;
 import gov.naco.soch.entity.NotificationEvent;
 import gov.naco.soch.notification.mapper.NotificationMapper;
-import gov.naco.soch.projection.EmailNotificationProjection;
 import gov.naco.soch.projection.NotificationEventProjection;
+import gov.naco.soch.projection.NotificationProjection;
 import gov.naco.soch.projection.PlaceholderProjection;
 import gov.naco.soch.repository.NotificationEventPlaceholderRepository;
 import gov.naco.soch.repository.NotificationEventRepository;
@@ -56,8 +56,7 @@ public class NotificationService {
 	}
 
 	public void sendEmail(Map<String, Object> placeholderMap, Long eventId) {
-		List<EmailNotificationProjection> notificationDetails = notificationEventRepository
-				.findAllUsersByRoles(eventId);
+		List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);
 		List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
 		List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
 				.collect(Collectors.toList());
@@ -71,7 +70,41 @@ public class NotificationService {
 
 	}
 
-	private String replacePlaceHolders(String emailTemplate, Map<String, Object> placeholderMap, String recepient,
+	public void sendSms(Map<String, Object> placeholderMap, Long eventId) {
+		List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);
+		List<NotificationProjection> smsEnabledNotificationDetails = notificationDetails.stream()
+				.filter(x -> x.getSmsEnabled() == true).collect(Collectors.toList());
+		List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
+		List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
+				.collect(Collectors.toList());
+		smsEnabledNotificationDetails.forEach(detail -> {
+			String finalSmsTemplate = replacePlaceHolders(detail.getSmsTemplate(), placeholderMap,
+					detail.getRecepient(), placeholders);
+			System.out.println(finalSmsTemplate);
+			// TODO
+			// smsSendService.sendSms(detail.getMobileNumber(),finalSmsTemplate);
+		});
+
+	}
+
+	public void sendWhatsapp(Map<String, Object> placeholderMap, Long eventId) {
+		List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);
+		List<NotificationProjection> whatsappEnabledNotificationDetails = notificationDetails.stream()
+				.filter(x -> x.getWhatsappEnabled() == true).collect(Collectors.toList());
+		List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
+		List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
+				.collect(Collectors.toList());
+		whatsappEnabledNotificationDetails.forEach(detail -> {
+			String finalWhatsappTemplate = replacePlaceHolders(detail.getWhatsappTemplate(), placeholderMap,
+					detail.getRecepient(), placeholders);
+			System.out.println(finalWhatsappTemplate);
+			// TODO
+			// whatsappSendService.sendWhatsapp(detail.getMobileNumber(),finalWhatsappTemplate);
+		});
+
+	}
+
+	private String replacePlaceHolders(String template, Map<String, Object> placeholderMap, String recepient,
 			List<String> placeholders) {
 		Map<String, Object> values = new HashMap<>();
 		for (Entry<String, Object> placeholderEntry : placeholderMap.entrySet()) {
@@ -80,7 +113,7 @@ public class NotificationService {
 			}
 		}
 		values.put(RECEPIENT_KEY, recepient);
-		return StringSubstitutor.replace(emailTemplate, values, ANGLE_BRACKET_OPEN, ANGLE_BRACKET_CLOSED);
+		return StringSubstitutor.replace(template, values, ANGLE_BRACKET_OPEN, ANGLE_BRACKET_CLOSED);
 
 	}
 
