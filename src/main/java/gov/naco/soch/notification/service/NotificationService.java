@@ -42,7 +42,7 @@ public class NotificationService {
 
 	private static final String ANGLE_BRACKET_OPEN = "[";
 	private static final String ANGLE_BRACKET_CLOSED = "]";
-	private static final String RECEPIENT_KEY = "recepient";
+	private static final String RECIPIENT_KEY = "recipient";
 
 	public List<NotificationEventProjection> getEventList() {
 		return notificationEventRepository.findAllProjectedBy();
@@ -118,7 +118,7 @@ public class NotificationService {
 				values.put(placeholderEntry.getKey(), placeholderEntry.getValue());
 			}
 		}
-		values.put(RECEPIENT_KEY, recepient);
+		values.put(RECIPIENT_KEY, recepient);
 		return StringSubstitutor.replace(template, values, ANGLE_BRACKET_OPEN, ANGLE_BRACKET_CLOSED);
 
 	}

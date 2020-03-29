@@ -34,9 +34,6 @@ public class NotificationMapper {
 			NotificationEventRole notificationEventRole = new NotificationEventRole();
 			notificationEventRole.setNotificationEvent(notificationEvent);
 			notificationEventRole.setRole(role);
-			notificationEventRole.setWhatsappEnabled(true);
-			notificationEventRole.setEmailEnabled(true);
-			notificationEventRole.setSmsEnabled(true);
 			newRoles.add(notificationEventRole);
 		});
 		notificationEvent.getNotificationEventRoles().addAll(newRoles);
