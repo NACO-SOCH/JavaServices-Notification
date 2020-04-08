@@ -45,7 +45,7 @@ public class NotificationService {
 	private static final String RECIPIENT_KEY = "recipient";
 
 	public List<NotificationEventProjection> getEventList() {
-		return notificationEventRepository.findAllProjectedBy();
+		return notificationEventRepository.findAllProjectedByOrderByEventIdAsc();
 	}
 
 	public List<PlaceholderProjection> getPlaceHoldersForTheEvent(Long eventId) {
@@ -72,8 +72,9 @@ public class NotificationService {
 		notificationDetails.forEach(detail -> {
 			String finalEmailTemplate = replacePlaceHolders(detail.getEmailTemplate(), placeholderMap,
 					detail.getRecepient(), placeholders);
-			System.out.println(finalEmailTemplate);
-			emailService.sendEmail(detail.getEmailId(),detail.getEmailSubject(),finalEmailTemplate);
+			String finalEmailSubject=replacePlaceHolders(detail.getEmailSubject(), placeholderMap,
+					detail.getRecepient(), placeholders);
+			emailService.sendEmail(detail.getEmailId(),finalEmailSubject,finalEmailTemplate);
 		});
 
 	}
@@ -88,7 +89,6 @@ public class NotificationService {
 		smsEnabledNotificationDetails.forEach(detail -> {
 			String finalSmsTemplate = replacePlaceHolders(detail.getSmsTemplate(), placeholderMap,
 					detail.getRecepient(), placeholders);
-			System.out.println(finalSmsTemplate);
 			//smsService.sendSms(detail.getMobileNumber(),finalSmsTemplate);
 		});
 
@@ -104,7 +104,6 @@ public class NotificationService {
 		whatsappEnabledNotificationDetails.forEach(detail -> {
 			String finalWhatsappTemplate = replacePlaceHolders(detail.getWhatsappTemplate(), placeholderMap,
 					detail.getRecepient(), placeholders);
-			System.out.println(finalWhatsappTemplate);
 			//whatsAppService.sendWhatsApp(detail.getMobileNumber(),finalWhatsappTemplate);
 		});
 
