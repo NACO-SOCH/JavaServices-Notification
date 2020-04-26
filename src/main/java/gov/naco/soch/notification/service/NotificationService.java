@@ -24,6 +24,7 @@ import gov.naco.soch.projection.NotificationProjection;
 import gov.naco.soch.projection.PlaceholderProjection;
 import gov.naco.soch.repository.NotificationEventPlaceholderRepository;
 import gov.naco.soch.repository.NotificationEventRepository;
+import gov.naco.soch.util.CommonConstants;
 
 @Service
 @Transactional
@@ -65,16 +66,42 @@ public class NotificationService {
 	}
 
 	public void sendEmail(Map<String, Object> placeholderMap, Long eventId) {
-		List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);
-		List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
+		NotificationEvent event = null;
+		Optional<NotificationEvent> eventOpt = notificationEventRepository.findByEventIdAndIsEnabled(eventId, true);
+		if (eventOpt.isPresent()) {
+			event = eventOpt.get();
+		}
+		if (event.getIsSpecific() != null && event.getIsSpecific()) {
+			sendEmailToSpecificUsers(placeholderMap, event);
+		} else {
+			List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);
+			List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
+			List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
+					.collect(Collectors.toList());
+			notificationDetails.forEach(detail -> {
+				String finalEmailTemplate = replacePlaceHolders(detail.getEmailTemplate(), placeholderMap,
+						detail.getRecepient(), placeholders);
+				String finalEmailSubject = replacePlaceHolders(detail.getEmailSubject(), placeholderMap,
+						detail.getRecepient(), placeholders);
+				emailService.sendEmail(detail.getEmailId(), finalEmailSubject, finalEmailTemplate);
+			});
+		}
+	}
+
+	public void sendEmailToSpecificUsers(Map<String, Object> placeholderMap, NotificationEvent event) {
+		List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(event.getEventId());
 		List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
 				.collect(Collectors.toList());
-		notificationDetails.forEach(detail -> {
-			String finalEmailTemplate = replacePlaceHolders(detail.getEmailTemplate(), placeholderMap,
-					detail.getRecepient(), placeholders);
-			String finalEmailSubject=replacePlaceHolders(detail.getEmailSubject(), placeholderMap,
-					detail.getRecepient(), placeholders);
-			emailService.sendEmail(detail.getEmailId(),finalEmailSubject,finalEmailTemplate);
+		String finalEmailTemplate = replacePlaceHolders(event.getEmailTemplate(), placeholderMap,
+				String.valueOf(placeholderMap.get(CommonConstants.NOTIFICATION_SPECIFIC_RECIPIENT_NAME_PLACEHOLDER)),
+				placeholders);
+		String finalEmailSubject = replacePlaceHolders(event.getEmailSubject(), placeholderMap,
+				String.valueOf(placeholderMap.get(CommonConstants.NOTIFICATION_SPECIFIC_RECIPIENT_NAME_PLACEHOLDER)),
+				placeholders);
+		List<String> toEmailList = (List<String>) placeholderMap
+				.get(CommonConstants.NOTIFICATION_TO_SPECIFIC_EMAILS_PLACEHOLDER);
+		toEmailList.forEach(emailId -> {
+			emailService.sendEmail(emailId, finalEmailSubject, finalEmailTemplate);
 		});
 
 	}
@@ -82,14 +109,14 @@ public class NotificationService {
 	public void sendSms(Map<String, Object> placeholderMap, Long eventId) {
 		List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);
 		List<NotificationProjection> smsEnabledNotificationDetails = notificationDetails.stream()
-				.filter(x -> x.getSmsEnabled()!=null&& x.getSmsEnabled() == true).collect(Collectors.toList());
+				.filter(x -> x.getSmsEnabled() != null && x.getSmsEnabled() == true).collect(Collectors.toList());
 		List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
 		List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
 				.collect(Collectors.toList());
 		smsEnabledNotificationDetails.forEach(detail -> {
 			String finalSmsTemplate = replacePlaceHolders(detail.getSmsTemplate(), placeholderMap,
 					detail.getRecepient(), placeholders);
-			//smsService.sendSms(detail.getMobileNumber(),finalSmsTemplate);
+			// smsService.sendSms(detail.getMobileNumber(),finalSmsTemplate);
 		});
 
 	}
@@ -97,14 +124,15 @@ public class NotificationService {
 	public void sendWhatsapp(Map<String, Object> placeholderMap, Long eventId) {
 		List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);
 		List<NotificationProjection> whatsappEnabledNotificationDetails = notificationDetails.stream()
-				.filter(x -> x.getWhatsappEnabled()!=null&&x.getWhatsappEnabled() == true).collect(Collectors.toList());
+				.filter(x -> x.getWhatsappEnabled() != null && x.getWhatsappEnabled() == true)
+				.collect(Collectors.toList());
 		List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
 		List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
 				.collect(Collectors.toList());
 		whatsappEnabledNotificationDetails.forEach(detail -> {
 			String finalWhatsappTemplate = replacePlaceHolders(detail.getWhatsappTemplate(), placeholderMap,
 					detail.getRecepient(), placeholders);
-			//whatsAppService.sendWhatsApp(detail.getMobileNumber(),finalWhatsappTemplate);
+			// whatsAppService.sendWhatsApp(detail.getMobileNumber(),finalWhatsappTemplate);
 		});
 
 	}
