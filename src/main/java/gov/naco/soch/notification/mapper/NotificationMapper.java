@@ -12,6 +12,10 @@ public class NotificationMapper {
 
 	public static NotificationEvent mapToNotificationEvent(NotificationEventSaveDto notificationEventSaveDto,
 			NotificationEvent notificationEvent) {
+		
+		if (notificationEventSaveDto.getEventId() != null) {
+			notificationEvent.setEventId(notificationEventSaveDto.getEventId());
+		}
 
 		if (notificationEventSaveDto.getEmailSubject() != null) {
 			notificationEvent.setEmailSubject(notificationEventSaveDto.getEmailSubject());
