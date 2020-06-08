@@ -57,6 +57,12 @@
 				<env>prod</env>
 			</properties>
 		</profile>
+		<profile>
+			<id>performance</id>
+			<properties>
+				<env>performance</env>
+			</properties>
+		</profile>
 	</profiles>
 
 	<build>

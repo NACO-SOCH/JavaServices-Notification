@@ -1,0 +1,27 @@
+spring:
+   jpa:
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
+      database: POSTGRESQL
+      generate-ddl: false
+      open-in-view: false
+      show-sql: false
+      hibernate:
+         ddl-auto: none
+         use-new-id-generator-mappings: false
+         format_sql: true
+   datasource:
+      dataSourceClassName: org.postgresql.Driver
+      url: jdbc:postgresql://13.235.27.48:5432/soch-db-dev?currentSchema=soch
+      username: postgres
+      password: postgres
+logging:
+   level:
+       root: ERROR
+       org.springframework: ERROR
+       com.naco.soch: ERROR
+       org.hibernate: ERROR
+twilio:
+       sid: AC5af9c36150f95f44138367a93b8f9d3f
+       token: 06756371869d5b07e1358af6b2cf6cb0
+       smsnumber: "+12513337971"
+       whatsappnumber: "+14155238886"
