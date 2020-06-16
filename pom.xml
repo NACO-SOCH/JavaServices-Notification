@@ -63,6 +63,12 @@
 				<env>performance</env>
 			</properties>
 		</profile>
+		<profile>
+			<id>migration</id>
+			<properties>
+				<env>migration</env>
+			</properties>
+		</profile>
 	</profiles>
 
 	<build>
