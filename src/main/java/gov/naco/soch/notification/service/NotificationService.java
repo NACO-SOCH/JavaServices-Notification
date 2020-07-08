@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +89,9 @@ public class NotificationService {
 				String finalEmailSubject = replacePlaceHolders(detail.getEmailSubject(), placeholderMap,
 						detail.getRecepient(), placeholders);
 				try {
-					emailService.sendEmail(detail.getEmailId(), finalEmailSubject, finalEmailTemplate);	
+					if(!StringUtils.isBlank(detail.getEmailId())) {
+						emailService.sendEmail(detail.getEmailId(), finalEmailSubject, finalEmailTemplate);	
+					}
 				} catch (Exception e) {
 					logger.error("Exception in sendEmail->{}",e);
 				}
