@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.apache.commons.text.StringSubstitutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +31,9 @@ import gov.naco.soch.util.CommonConstants;
 @Service
 @Transactional
 public class NotificationService {
-
+	
+	private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
+	
 	@Autowired
 	private NotificationEventRepository notificationEventRepository;
 	@Autowired
@@ -83,7 +87,11 @@ public class NotificationService {
 						detail.getRecepient(), placeholders);
 				String finalEmailSubject = replacePlaceHolders(detail.getEmailSubject(), placeholderMap,
 						detail.getRecepient(), placeholders);
-				emailService.sendEmail(detail.getEmailId(), finalEmailSubject, finalEmailTemplate);
+				try {
+					emailService.sendEmail(detail.getEmailId(), finalEmailSubject, finalEmailTemplate);	
+				} catch (Exception e) {
+					logger.error("Exception in sendEmail->{}",e);
+				}
 			});
 		}
 	}
