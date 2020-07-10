@@ -11,7 +11,7 @@ spring:
          format_sql: true
    datasource:
       dataSourceClassName: org.postgresql.Driver
-      url: jdbc:postgresql://13.232.227.9:5432/mig_db01?currentSchema=soch
+      url: jdbc:postgresql://13.234.214.47:5432/mig_db01?currentSchema=soch
       username: postgres
       password: sanju@123
 logging:
