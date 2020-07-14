@@ -33,14 +33,16 @@ public class NotificationMapper {
 		Set<NotificationEventRole> newRoles = new HashSet<>();
 		if(notificationEvent.getNotificationEventRoles()!=null)
 		notificationEvent.getNotificationEventRoles().clear();
+		System.out.println("Size of notificationEvent.getNotificationEventRoles() :"+notificationEvent.getNotificationEventRoles().size());
 		notificationEventSaveDto.getRoleIds().forEach(roleId -> {
 			Role role = new Role();
 			role.setId(roleId);
 			NotificationEventRole notificationEventRole = new NotificationEventRole();
 			notificationEventRole.setRole(role);
+			notificationEventRole.setNotificationEvent(notificationEvent);
 			newRoles.add(notificationEventRole);
 		});
-		notificationEvent.setNotificationEventRoles(newRoles);
+		notificationEvent.getNotificationEventRoles().addAll(newRoles);
 		return notificationEvent;
 
 	}
