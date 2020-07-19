@@ -22,9 +22,9 @@ spring:
          format_sql: true
    datasource:
       dataSourceClassName: org.postgresql.Driver
-      url: jdbc:postgresql://3.6.122.180:5432/mig_db01?currentSchema=soch
-      username: sochapp_usr
-      password: s0chUT2
+      url: jdbc:postgresql://13.234.214.47:5432/mig_db01?currentSchema=soch
+      username: postgres
+      password: sanju@123
 logging:
    level:
        root: ERROR
