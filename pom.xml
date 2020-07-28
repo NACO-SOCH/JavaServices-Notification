@@ -69,6 +69,12 @@
 				<env>migration</env>
 			</properties>
 		</profile>
+		<profile>
+			<id>staging</id>
+			<properties>
+				<env>staging</env>
+			</properties>
+		</profile>
 	</profiles>
 
 	<build>

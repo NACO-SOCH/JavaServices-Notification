@@ -111,6 +111,7 @@ public class NotificationService {
 				placeholders);
 		List<String> toEmailList = (List<String>) placeholderMap
 				.get(CommonConstants.NOTIFICATION_TO_SPECIFIC_EMAILS_PLACEHOLDER);
+		System.out.println("Email Ids"+toEmailList);
 		toEmailList.forEach(emailId -> {
 			emailService.sendEmail(emailId, finalEmailSubject, finalEmailTemplate);
 		});
