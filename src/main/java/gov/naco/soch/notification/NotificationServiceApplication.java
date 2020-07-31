@@ -37,7 +37,7 @@ public class NotificationServiceApplication extends SpringBootServletInitializer
 	 *            the command line arguments.
 	 */
 	public static void main(String[] args) {
-		SpringApplication.run(NotificationServiceApplication.class, args);
+		SpringApplication.run(NotificationServiceApplication.class);
 
 	}
 
