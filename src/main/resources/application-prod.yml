@@ -38,3 +38,4 @@ twilio:
        whatsappnumber: "+14155238886"
 accessKey: $5gw@965
 crossDomainAllowedOrigins: http://localhost:4200,https://52.136.112.194/sochqa,https://3.7.182.184/nacouat,https://3.7.182.184,https://projectsoch.org/sochuat
+jwtSecret: U09DSCtIZTExMFMzY3crRG9udDN2M3J0cjF0MGYhbmRNMyt3QHJuIW5nKy4=

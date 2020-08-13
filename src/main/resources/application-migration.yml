@@ -38,3 +38,4 @@ twilio:
        whatsappnumber: "+14155238886"
 accessKey: $5gw@965
 crossDomainAllowedOrigins:
+jwtSecret: U09DSCtUMHBTM2NyRXQrQXV0aG9yaXphdGlvbit0b2tlbitrZXk=
