@@ -36,3 +36,4 @@ twilio:
        smsnumber: "+12513337971"
        whatsappnumber: "+14155238886"
 accessKey: $5gw@965
+crossDomainAllowedOrigins:
