@@ -20,10 +20,16 @@ spring:
          ddl-auto: none
          use-new-id-generator-mappings: false
          format_sql: true
+      properties:
+         hibernate.id.new_generator_mappings: true
+         hibernate.connection.provider_disables_autocommit: true
+         hibernate.cache.use_second_level_cache: false
+         hibernate.cache.use_query_cache: true
+         hibernate.generate_statistics: true
    datasource:
       dataSourceClassName: org.postgresql.Driver
       #url: jdbc:postgresql://localhost:9999/soch-db-dev?currentSchema=soch
-      url: jdbc:postgresql://13.127.180.228:5432/soch-db-dev?currentSchema=soch
+      url: jdbc:postgresql://13.127.180.228:9999/soch-db-dev?currentSchema=soch
       username: postgres
       password: postgres
 logging:
