@@ -29,7 +29,7 @@ spring:
    datasource:
       dataSourceClassName: org.postgresql.Driver
       #url: jdbc:postgresql://localhost:9999/soch-db-dev?currentSchema=soch
-      url: jdbc:postgresql://13.127.180.228:9999/soch-db-dev?currentSchema=soch
+      url: jdbc:postgresql://13.127.180.228:9999/soch_db_dev_2?currentSchema=soch
       username: postgres
       password: postgres
 logging:
