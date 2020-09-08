@@ -2,8 +2,8 @@ spring:
    mail:
     host: smtp.gmail.com
     port: 587
-    username: rishadkavad@gmail.com
-    password: Burstout$18
+    username: sochusttest@gmail.com
+    password: soch2020
     protocol: smtp
     tls: true
     properties.mail.smtp:
