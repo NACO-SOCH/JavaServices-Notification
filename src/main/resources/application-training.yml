@@ -1,0 +1,40 @@
+spring:
+   mail:
+    host: smtp.gmail.com
+    port: 587
+    username: sochusttest@gmail.com
+    password: soch2020
+    protocol: smtp
+    tls: true
+    properties.mail.smtp:
+        auth: true
+        starttls.enable: true
+        ssl.trust: smtp.gmail.com
+   jpa:
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
+      database: POSTGRESQL
+      generate-ddl: false
+      open-in-view: false
+      show-sql: true
+      hibernate:
+         ddl-auto: none
+         use-new-id-generator-mappings: false
+   datasource:
+       dataSourceClassName: org.postgresql.Driver
+       url: jdbc:postgresql://10.247.185.10:5432/soch_train_app_db?currentSchema=soch
+       username: soch_train_app_user
+       password: S0chApP2020
+logging:
+   level:
+       root: INFO
+       org.springframework: INFO
+       com.naco.soch: INFO
+       org.hibernate: INFO
+twilio:
+       sid: AC5af9c36150f95f44138367a93b8f9d3f
+       token: 06756371869d5b07e1358af6b2cf6cb0
+       smsnumber: "+12513337971"
+       whatsappnumber: "+14155238886"
+accessKey: $5gw@965
+crossDomainAllowedOrigins:
+jwtSecret: U09DSCtUMHBTM2NyRXQrQXV0aG9yaXphdGlvbit0b2tlbitrZXk=

@@ -81,6 +81,12 @@
 				<env>uat</env>
 			</properties>
 		</profile>
+		<profile>
+			<id>training</id>
+			<properties>
+				<env>training</env>
+			</properties>
+		</profile>
 	</profiles>
 
 	<build>
