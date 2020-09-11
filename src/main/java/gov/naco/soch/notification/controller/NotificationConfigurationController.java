@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.naco.soch.dto.MiniMasterDto;
 import gov.naco.soch.dto.NotificationEventSaveDto;
 import gov.naco.soch.notification.service.NotificationService;
 import gov.naco.soch.projection.NotificationEventProjection;
@@ -33,7 +34,13 @@ public class NotificationConfigurationController {
 	@GetMapping("/list")
 	public List<NotificationEventProjection> getEventList() {
 		logger.debug("Entered getEventList Method ");
+		try {
 		return notificationService.getEventList();
+		}
+		catch (Exception e) {
+			System.out.println("Exception :"+e.getMessage());
+		}
+		return null;
 
 	}
 
@@ -49,6 +56,12 @@ public class NotificationConfigurationController {
 		notificationService.saveEvent(notificationEventSaveDto);
 		return true;
 
+	}
+	
+	@GetMapping("/type/list")
+	public List<MiniMasterDto> getEventTypeList(){
+		logger.debug("Entered getEventTypeList Method ");
+		return notificationService.getEventTypeList();
 	}
 
 }

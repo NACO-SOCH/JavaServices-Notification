@@ -3,7 +3,9 @@ package gov.naco.soch.notification.mapper;
 import java.util.HashSet;
 import java.util.Set;
 
+import gov.naco.soch.dto.MasterDto;
 import gov.naco.soch.dto.NotificationEventSaveDto;
+import gov.naco.soch.entity.MasterNotificationEventType;
 import gov.naco.soch.entity.NotificationEvent;
 import gov.naco.soch.entity.NotificationEventRole;
 import gov.naco.soch.entity.Role;
@@ -43,6 +45,14 @@ public class NotificationMapper {
 			newRoles.add(notificationEventRole);
 		});
 		notificationEvent.getNotificationEventRoles().addAll(newRoles);
+		if(notificationEventSaveDto.getMasterNotificationEventType()!=null) {
+	    MasterNotificationEventType eventType = new MasterNotificationEventType();
+		MasterDto eventTypeDto = notificationEventSaveDto.getMasterNotificationEventType();
+		eventType.setId(eventTypeDto.getId());
+		notificationEvent.setMasterNotificationEventType(eventType);
+		}
+		else
+		notificationEvent.setMasterNotificationEventType(null);
 		return notificationEvent;
 
 	}

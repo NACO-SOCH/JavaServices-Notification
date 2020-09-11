@@ -1,5 +1,6 @@
 package gov.naco.soch.notification.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import gov.naco.soch.dto.MiniMasterDto;
 import gov.naco.soch.dto.NotificationEventSaveDto;
+import gov.naco.soch.entity.MasterNotificationEventType;
 import gov.naco.soch.entity.NotificationEvent;
 import gov.naco.soch.notification.mapper.NotificationMapper;
 import gov.naco.soch.notification.sender.EmailSenderService;
@@ -25,6 +28,7 @@ import gov.naco.soch.notification.sender.WhatsAppSenderService;
 import gov.naco.soch.projection.NotificationEventProjection;
 import gov.naco.soch.projection.NotificationProjection;
 import gov.naco.soch.projection.PlaceholderProjection;
+import gov.naco.soch.repository.MasterNotificationEventTypeRepository;
 import gov.naco.soch.repository.NotificationEventPlaceholderRepository;
 import gov.naco.soch.repository.NotificationEventRepository;
 import gov.naco.soch.util.CommonConstants;
@@ -39,6 +43,10 @@ public class NotificationService {
 	private NotificationEventRepository notificationEventRepository;
 	@Autowired
 	private NotificationEventPlaceholderRepository notificationEventPlaceholderRepository;
+	
+	@Autowired
+	private MasterNotificationEventTypeRepository notificationEventTypeRepository;
+	
 	@Autowired
 	private SmsSenderService smsService;
 	@Autowired
@@ -160,6 +168,25 @@ public class NotificationService {
 		values.put(RECIPIENT_KEY, recepient);
 		return StringSubstitutor.replace(template, values, ANGLE_BRACKET_OPEN, ANGLE_BRACKET_CLOSED);
 
+	}
+
+	/**
+	 * getEventTypeList : method to fetch notification event type list
+	 * @return
+	 */
+	public List<MiniMasterDto> getEventTypeList() {
+		
+		List<MasterNotificationEventType> notificationTypes = notificationEventTypeRepository.findAll();
+		List<MiniMasterDto> notificationTypesList = new ArrayList<MiniMasterDto>();
+		if(notificationTypes!=null) {
+		for(MasterNotificationEventType eventType : notificationTypes) {
+			MiniMasterDto masterDto = new MiniMasterDto();
+			masterDto.setId(eventType.getId());
+			masterDto.setName(eventType.getName());
+			notificationTypesList.add(masterDto);
+		 }
+		}
+		return notificationTypesList;
 	}
 
 }
