@@ -54,6 +54,7 @@ public class NotificationService {
 	@Autowired
 	private EmailSenderService emailService;
 
+	private static String senderMail = "notification@soch-gov.in";
 	private static final String ANGLE_BRACKET_OPEN = "[";
 	private static final String ANGLE_BRACKET_CLOSED = "]";
 	private static final String RECIPIENT_KEY = "recipient";
@@ -87,6 +88,8 @@ public class NotificationService {
 		if (event.getIsSpecific() != null && event.getIsSpecific()) {
 			sendEmailToSpecificUsers(placeholderMap, event);
 		} else {
+			senderMail = event.getMasterNotificationEventType().getSenderEmail();
+			System.out.println("Sender mail :"+senderMail);
 			List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);
 			List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
 			List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
@@ -98,7 +101,7 @@ public class NotificationService {
 						detail.getRecepient(), placeholders);
 				try {
 					if(!StringUtils.isBlank(detail.getEmailId())) {
-						emailService.sendEmail(detail.getEmailId(), finalEmailSubject, finalEmailTemplate);	
+						emailService.sendEmail(detail.getEmailId(), finalEmailSubject, finalEmailTemplate,senderMail);	
 					}
 				} catch (Exception e) {
 					logger.error("Exception in sendEmail->{}",e);
@@ -108,6 +111,8 @@ public class NotificationService {
 	}
 
 	public void sendEmailToSpecificUsers(Map<String, Object> placeholderMap, NotificationEvent event) {
+        if(event.getMasterNotificationEventType()!=null)
+        senderMail = event.getMasterNotificationEventType().getSenderEmail();
 		List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(event.getEventId());
 		List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
 				.collect(Collectors.toList());
@@ -121,7 +126,7 @@ public class NotificationService {
 				.get(CommonConstants.NOTIFICATION_TO_SPECIFIC_EMAILS_PLACEHOLDER);
 		System.out.println("Email Ids"+toEmailList);
 		toEmailList.forEach(emailId -> {
-			emailService.sendEmail(emailId, finalEmailSubject, finalEmailTemplate);
+			emailService.sendEmail(emailId, finalEmailSubject, finalEmailTemplate,senderMail);
 		});
 
 	}
