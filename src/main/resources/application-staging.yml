@@ -21,7 +21,7 @@ spring:
          use-new-id-generator-mappings: false
    datasource:
        dataSourceClassName: org.postgresql.Driver
-       url: jdbc:postgresql://10.247.185.11:5432/soch_stag_app_db?currentSchema=soch
+       url: jdbc:postgresql://10.247.185.11:9999/soch_stag_app_db?currentSchema=soch
        username: soch_stag_app_user
        password: S0chApP2020
 logging:
