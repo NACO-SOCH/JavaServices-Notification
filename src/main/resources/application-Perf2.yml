@@ -2,8 +2,8 @@ spring:
    mail:
     host: smtp.gmail.com
     port: 587
-    username: rishadkavad@gmail.com
-    password: Burstout$18
+    username: sochusttest@gmail.com
+    password: soch2020
     protocol: smtp
     tls: true
     properties.mail.smtp:
@@ -15,26 +15,27 @@ spring:
       database: POSTGRESQL
       generate-ddl: false
       open-in-view: false
-      show-sql: true
+      show-sql: false
       hibernate:
          ddl-auto: none
          use-new-id-generator-mappings: false
+         format_sql: true
    datasource:
-       dataSourceClassName: org.postgresql.Driver
-       url: jdbc:postgresql://localhost:5432/soch-db-dev?currentSchema=soch
-       username: postgres
-       password: postgres
+      dataSourceClassName: org.postgresql.Driver
+      url: jdbc:postgresql://localhost:5432/soch-db-dev?currentSchema=soch
+      username: postgres
+      password: postgres
 logging:
    level:
-       root: INFO
-       org.springframework: INFO
-       com.naco.soch: INFO
-       org.hibernate: INFO
+       root: ERROR
+       org.springframework: ERROR
+       com.naco.soch: ERROR
+       org.hibernate: ERROR
 twilio:
        sid: AC5af9c36150f95f44138367a93b8f9d3f
        token: 06756371869d5b07e1358af6b2cf6cb0
        smsnumber: "+12513337971"
        whatsappnumber: "+14155238886"
 accessKey: $5gw@965
-crossDomainAllowedOrigins:
-jwtSecret: U09DSCtUMHBTM2NyRXQrQXV0aG9yaXphdGlvbit0b2tlbitrZXk=
+crossDomainAllowedOrigins: http://localhost:4200,https://52.136.112.194,https://3.7.182.184,https://projectsoch.org,https://project-qasoch.org
+jwtSecret: U09DSCtIZTExMFMzY3crRG9udDN2M3J0cjF0MGYhbmRNMyt3QHJuIW5nKy4=
