@@ -15,21 +15,27 @@ spring:
       database: POSTGRESQL
       generate-ddl: false
       open-in-view: false
-      show-sql: true
+      show-sql: false
       hibernate:
          ddl-auto: none
-         use-new-id-generator-mappings: false
+      properties:
+         hibernate.id.new_generator_mappings: true
+         hibernate.cache.use_second_level_cache: false
+         hibernate.cache.use_query_cache: true
+         hibernate.generate_statistics: false
    datasource:
-       dataSourceClassName: org.postgresql.Driver
+       type: com.zaxxer.hikari.HikariDataSource
+       #dataSourceClassName: org.postgresql.Driver
        url: jdbc:postgresql://10.247.185.10:5432/soch_train_app_db?currentSchema=soch
        username: soch_train_app_user
        password: S0chApP2020
+       hikari:
+        poolName: Hikari
 logging:
    level:
-       root: INFO
-       org.springframework: INFO
-       com.naco.soch: INFO
-       org.hibernate: INFO
+       root: error
+       org: error
+       gov: error
 twilio:
        sid: AC5af9c36150f95f44138367a93b8f9d3f
        token: 06756371869d5b07e1358af6b2cf6cb0
