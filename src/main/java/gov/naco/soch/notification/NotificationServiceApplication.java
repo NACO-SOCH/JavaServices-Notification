@@ -17,7 +17,7 @@ import com.twilio.Twilio;
 @EnableJpaRepositories("gov.naco.soch.repository")
 @EntityScan("gov.naco.soch.entity")
 @ComponentScan(basePackages = { "gov.naco.soch" })
-@PropertySource("classpath:application-${spring.profiles.active}.yml")
+//@PropertySource("classpath:application-${spring.profiles.active}.yml")
 public class NotificationServiceApplication extends SpringBootServletInitializer {
 
 	@Value("${twilio.sid}")
