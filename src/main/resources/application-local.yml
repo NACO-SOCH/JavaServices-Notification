@@ -33,9 +33,9 @@ spring:
         poolName: Hikari
 logging:
    level:
-       root: error
-       org: error
-       gov: error
+       root: info
+       org: info
+       gov: info
 twilio:
        sid: AC5af9c36150f95f44138367a93b8f9d3f
        token: 06756371869d5b07e1358af6b2cf6cb0
