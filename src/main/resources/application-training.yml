@@ -42,5 +42,5 @@ twilio:
        smsnumber: "+12513337971"
        whatsappnumber: "+14155238886"
 accessKey: $5gw@965
-crossDomainAllowedOrigins: http://sochtraining.naco.gov.in
+crossDomainAllowedOrigins: https://sochtraining.naco.gov.in
 jwtSecret: U09DSCtUMHBTM2NyRXQrQXV0aG9yaXphdGlvbit0b2tlbitrZXk=
