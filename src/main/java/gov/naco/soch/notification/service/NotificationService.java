@@ -88,9 +88,9 @@ public class NotificationService {
 		if (event.getIsSpecific() != null && event.getIsSpecific()) {
 			sendEmailToSpecificUsers(placeholderMap, event);
 		} else {
-			if(event.getMasterNotificationEventType()!=null)
-			senderMail = event.getMasterNotificationEventType().getSenderEmail();
-			System.out.println("Sender mail :"+senderMail);
+			if(event.getMasterNotificationEventType()!=null) {
+				senderMail = event.getMasterNotificationEventType().getSenderEmail();	
+			}
 			List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);
 			List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
 			List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
