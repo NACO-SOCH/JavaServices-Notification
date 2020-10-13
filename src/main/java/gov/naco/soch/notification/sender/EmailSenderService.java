@@ -38,7 +38,7 @@ public class EmailSenderService {
 			helper.setSubject(subject);
 			emailSender.send(mimeMessage);
 		} catch (Exception e) {
-			logger.error("Exception in sendEmail->{}", e);
+			logger.error("Exception in sendEmail->", e);
 		}
 
 	}
