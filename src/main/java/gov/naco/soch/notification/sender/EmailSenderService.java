@@ -22,18 +22,13 @@ public class EmailSenderService {
 	public JavaMailSender emailSender;
 
 	private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
-	
+
 	public void sendEmail(String to, String subject, String text, String senderMail) {
-//		SimpleMailMessage message = new SimpleMailMessage();
-//		message.setTo(to);
-//		message.setSubject(subject);
-//		message.setText(text);
-//		emailSender.send(message);
-		
-/**
- * New code added for accepting HTML templates 
- * @author Rishad Basheer
- */
+		/**
+		 * New code added for accepting HTML templates
+		 * 
+		 * @author Rishad Basheer
+		 */
 		try {
 			MimeMessage mimeMessage = emailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, CharEncoding.UTF_8);
@@ -41,11 +36,9 @@ public class EmailSenderService {
 			helper.setText(text, true); // Use this or above line.
 			helper.setTo(to);
 			helper.setSubject(subject);
-			//helper.addInline("leftSideImage",new File("C:/Users/u76718/Desktop/Bug_resolution_screenshots/naco2.png"));
 			emailSender.send(mimeMessage);
-		}
-		catch (Exception e) {
-			logger.error("Error :",e.getMessage());
+		} catch (Exception e) {
+			logger.error("Exception in sendEmail->{}", e);
 		}
 
 	}
