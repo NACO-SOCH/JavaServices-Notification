@@ -125,7 +125,7 @@ public class NotificationService {
 				placeholders);
 		List<String> toEmailList = (List<String>) placeholderMap
 				.get(CommonConstants.NOTIFICATION_TO_SPECIFIC_EMAILS_PLACEHOLDER);
-		System.out.println("Email Ids"+toEmailList);
+		logger.info("Email Ids-->{}:",toEmailList);
 		toEmailList.forEach(emailId -> {
 			emailService.sendEmail(emailId, finalEmailSubject, finalEmailTemplate,senderMail);
 		});
@@ -142,7 +142,7 @@ public class NotificationService {
 		smsEnabledNotificationDetails.forEach(detail -> {
 			String finalSmsTemplate = replacePlaceHolders(detail.getSmsTemplate(), placeholderMap,
 					detail.getRecepient(), placeholders);
-			// smsService.sendSms(detail.getMobileNumber(),finalSmsTemplate);
+			smsService.sendSms(detail.getMobileNumber(),finalSmsTemplate);
 		});
 
 	}

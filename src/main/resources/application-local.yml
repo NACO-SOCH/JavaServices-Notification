@@ -44,3 +44,7 @@ twilio:
 accessKey: $5gw@965
 crossDomainAllowedOrigins:
 jwtSecret: U09DSCtUMHBTM2NyRXQrQXV0aG9yaXphdGlvbit0b2tlbitrZXk=
+notificationSmsApiEndpoint: https://dummyurl/dummyurl/dummyurl
+notificationSmsApiUsername: dummyuser
+notificationSmsApiPin: dummypin
+notificationSmsApiSignature: SENDERID
