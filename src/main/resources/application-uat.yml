@@ -36,11 +36,6 @@ logging:
        root: error
        org: error
        gov: error
-twilio:
-       sid: AC5af9c36150f95f44138367a93b8f9d3f
-       token: 06756371869d5b07e1358af6b2cf6cb0
-       smsnumber: "+12513337971"
-       whatsappnumber: "+14155238886"
 accessKey: $5gw@965
 crossDomainAllowedOrigins: http://localhost:4200,https://52.136.112.194,https://3.7.182.184,https://projectsoch.org
 jwtSecret: U09DSCtIZTExMFMzY3crRG9udDN2M3J0cjF0MGYhbmRNMyt3QHJuIW5nKy4=
