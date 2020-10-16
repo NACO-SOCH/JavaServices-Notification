@@ -44,3 +44,7 @@ twilio:
 accessKey: $5gw@965
 crossDomainAllowedOrigins: http://localhost:4200,https://52.136.112.194,https://3.7.182.184,https://projectsoch.org,https://project-qasoch.org,https://15.207.231.130
 jwtSecret: U09DSCtIZTExMFMzY3crRG9udDN2M3J0cjF0MGYhbmRNMyt3QHJuIW5nKy4=
+notificationSmsApiEndpoint: https://dummyurl/dummyurl/dummyurl
+notificationSmsApiUsername: dummyuser
+notificationSmsApiPin: dummypin
+notificationSmsApiSignature: SENDERID
