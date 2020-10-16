@@ -31,11 +31,6 @@ import org.springframework.web.client.RestTemplate;
 //@PropertySource("classpath:application-${spring.profiles.active}.yml")
 public class NotificationServiceApplication extends SpringBootServletInitializer {
 
-	@Value("${twilio.sid}")
-	private String sid;
-	@Value("${twilio.token}")
-	private String token;
-
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(NotificationServiceApplication.class);
