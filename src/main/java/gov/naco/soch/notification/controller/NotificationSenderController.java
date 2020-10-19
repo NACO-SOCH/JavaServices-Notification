@@ -32,6 +32,7 @@ public class NotificationSenderController {
 	public boolean sendEmail(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
 		logger.debug("Entered sendEmail Method");
 		notificationService.sendEmail(placeholderMap, eventId);
+		logger.info("After sent mail : NotificationSenderController!");
 		return true;
 	}
 	

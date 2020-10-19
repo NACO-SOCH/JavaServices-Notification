@@ -27,13 +27,16 @@ public class EmailSenderService {
 		 * @author Rishad Basheer
 		 */
 		try {
+			logger.info("Inside of sendMail : EmailSenderService !");
 			MimeMessage mimeMessage = emailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, CharEncoding.UTF_8);
 			helper.setFrom(senderMail, senderMail);
 			helper.setText(text, true); // Use this or above line.
 			helper.setTo(to);
 			helper.setSubject(subject);
+			logger.info("Inside of sendMail (before send mail) : EmailSenderService !");
 			emailSender.send(mimeMessage);
+			logger.info("Inside of sendMail (After sent mail) : EmailSenderService !");
 		} catch (Exception e) {
 			logger.error("Exception in sendEmail->", e);
 		}

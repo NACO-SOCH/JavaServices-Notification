@@ -80,12 +80,14 @@ public class NotificationService {
 	}
 
 	public void sendEmail(Map<String, Object> placeholderMap, Long eventId) {
+		logger.info("Inside of sendEmail() : NotificationService");
 		NotificationEvent event = null;
 		Optional<NotificationEvent> eventOpt = notificationEventRepository.findByEventIdAndIsEnabled(eventId, true);
 		if (eventOpt.isPresent()) {
 			event = eventOpt.get();
 		}
 		if (event.getIsSpecific() != null && event.getIsSpecific()) {
+			logger.info("Inside of if (event.getIsSpecific() != null && event.getIsSpecific()) : NotificationService");
 			sendEmailToSpecificUsers(placeholderMap, event);
 		} else {
 			if(event.getMasterNotificationEventType()!=null) {
@@ -112,6 +114,7 @@ public class NotificationService {
 	}
 
 	public void sendEmailToSpecificUsers(Map<String, Object> placeholderMap, NotificationEvent event) {
+		logger.info("Iniside of sendEmailToSpecificUsers(Map<String, Object> placeholderMap, NotificationEvent event) : NotificationService! ");
         if(event.getMasterNotificationEventType()!=null)
         senderMail = event.getMasterNotificationEventType().getSenderEmail();
 		List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(event.getEventId());
