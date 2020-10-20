@@ -104,7 +104,9 @@ public class NotificationService {
 						detail.getRecepient(), placeholders);
 				try {
 					if(!StringUtils.isBlank(detail.getEmailId())) {
+						logger.info("Going to call emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",eventId, detail.getEmailId());
 						emailService.sendEmail(detail.getEmailId(), finalEmailSubject, finalEmailTemplate,senderMail);	
+						logger.info("Called emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",eventId, detail.getEmailId());
 					}
 				} catch (Exception e) {
 					logger.error("Exception in sendEmail->{}",e);
@@ -130,7 +132,9 @@ public class NotificationService {
 				.get(CommonConstants.NOTIFICATION_TO_SPECIFIC_EMAILS_PLACEHOLDER);
 		logger.info("Email Ids-->{}:",toEmailList);
 		toEmailList.forEach(emailId -> {
+			logger.info("Going to call SPECIFIC emailService.sendEmail with eventId-->{}: emailId-->{}:",event.getEventId(), emailId);
 			emailService.sendEmail(emailId, finalEmailSubject, finalEmailTemplate,senderMail);
+			logger.info("Called SPECIFIC emailService.sendEmail with eventId-->{}: emailId-->{}:",event.getEventId(), emailId);
 		});
 
 	}

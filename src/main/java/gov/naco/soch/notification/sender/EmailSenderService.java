@@ -10,15 +10,13 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
-import gov.naco.soch.notification.service.NotificationService;
-
 @Component
 public class EmailSenderService {
 
 	@Autowired
 	public JavaMailSender emailSender;
 
-	private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
+	private static final Logger logger = LoggerFactory.getLogger(EmailSenderService.class);
 
 	public void sendEmail(String to, String subject, String text, String senderMail) {
 		/**
