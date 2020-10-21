@@ -38,7 +38,7 @@ public class NotificationConfigurationController {
 		return notificationService.getEventList();
 		}
 		catch (Exception e) {
-			System.out.println("Exception :"+e.getMessage());
+			logger.error("Exception :"+e.getMessage());
 		}
 		return null;
 
