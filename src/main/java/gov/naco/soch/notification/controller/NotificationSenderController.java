@@ -28,7 +28,7 @@ public class NotificationSenderController {
 
 	private static final Logger logger = LoggerFactory.getLogger(NotificationSenderController.class);
 
-	@PostMapping(value = "/sendemail/{eventId}", produces = { "application/json", "application/xml" })
+	@PostMapping(value = "/sendemail/{eventId}", produces = { "application/json" })
 	public void sendEmail(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
 		logger.debug("Entered sendEmail Method");
 		notificationService.sendEmail(placeholderMap, eventId);
