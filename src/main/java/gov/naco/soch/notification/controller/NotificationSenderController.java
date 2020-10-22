@@ -22,20 +22,20 @@ public class NotificationSenderController {
 
 	@Autowired
 	private NotificationService notificationService;
-	
+
 	@Autowired
 	private Environment env;
 
 	private static final Logger logger = LoggerFactory.getLogger(NotificationSenderController.class);
 
-	@PostMapping("/sendemail/{eventId}")
-	public boolean sendEmail(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
+	@PostMapping(value = "/sendemail/{eventId}", produces = { "application/json", "application/xml" })
+	public void sendEmail(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
 		logger.debug("Entered sendEmail Method");
 		notificationService.sendEmail(placeholderMap, eventId);
 		logger.info("After sent mail : NotificationSenderController!");
-		return true;
+		//return true;
 	}
-	
+
 	@PostMapping("/sendsms/{eventId}")
 	public boolean sendSms(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
 		logger.debug("Entered sendSms Method");
@@ -49,7 +49,7 @@ public class NotificationSenderController {
 		notificationService.sendWhatsapp(placeholderMap, eventId);
 		return true;
 	}
-	
+
 //API for sending system emails
 	@PostMapping("/sendsystememail/{eventId}")
 	public boolean sendSystemEmail(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
@@ -57,14 +57,10 @@ public class NotificationSenderController {
 		String accessKey = placeholderMap.get("accessKey").toString();
 		if (StringUtils.isBlank(accessKey) || !env.getProperty(CommonConstants.PROPERTY_ACCESS_KEY).equals(accessKey)) {
 			throw new AccessDeniedException("accessKey is not valid");
-		}
-		else {
+		} else {
 			notificationService.sendEmail(placeholderMap, eventId);
 		}
 		return true;
 	}
-	
-	
-	
-	
+
 }
