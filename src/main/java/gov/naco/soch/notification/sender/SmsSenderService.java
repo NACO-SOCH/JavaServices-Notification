@@ -35,23 +35,27 @@ public class SmsSenderService {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	public boolean sendSms(String mobileNumber, String smsTemplate) {
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		if (mobileNumber.length() <= 10) {
-			mobileNumber = "91" + mobileNumber;
+	public void sendSms(String mobileNumber, String smsTemplate) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			if (mobileNumber.length() <= 10) {
+				mobileNumber = "91" + mobileNumber;
+			}
+			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(smsApiEndpoint)
+					.queryParam("username", smsApiUserName).queryParam("pin", smsApiPin)
+					.queryParam("message", smsTemplate).queryParam("mnumber", mobileNumber)
+					.queryParam("signature", smsApiSignature);
+			HttpEntity<?> entity = new HttpEntity<>(headers);
+			logger.info("Going to send SMS to mobileNumber-->{}:", mobileNumber);
+			restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, String.class);
+			logger.info("Sent SMS to mobileNumber-->{}:", mobileNumber);
+			// Message.creator(new PhoneNumber(mobileNumber), new PhoneNumber(sms_number),
+			// smsTemplate).create();
+		} catch (Exception e) {
+			logger.error("Exception in sendSms->", e);
 		}
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(smsApiEndpoint)
-				.queryParam("username", smsApiUserName).queryParam("pin", smsApiPin).queryParam("message", smsTemplate)
-				.queryParam("mnumber", mobileNumber).queryParam("signature", smsApiSignature);
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		logger.info("Going to send SMS to mobileNumber-->{}:", mobileNumber);
-		restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, String.class);
-		logger.info("Sent SMS to mobileNumber-->{}:", mobileNumber);
-		// Message.creator(new PhoneNumber(mobileNumber), new PhoneNumber(sms_number),
-		// smsTemplate).create();
-		return true;
+
 	}
 
 }

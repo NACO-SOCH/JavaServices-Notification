@@ -10,12 +10,11 @@ public class WhatsAppSenderService {
 
 	public static final String WHATSAPP_FORMAT = "whatsapp:";
 
-	public boolean sendWhatsApp(String whatsAppNumber, String whatsAppTemplate) {
+	public void sendWhatsApp(String whatsAppNumber, String whatsAppTemplate) {
 		/*
 		 * Message.creator(new PhoneNumber(WHATSAPP_FORMAT + whatsAppNumber), new
 		 * PhoneNumber(WHATSAPP_FORMAT + whatsapp_number), whatsAppTemplate).create();
 		 */
-		return true;
 	}
 
 }

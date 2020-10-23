@@ -54,7 +54,7 @@ public class NotificationService {
 	@Autowired
 	private EmailSenderService emailService;
 
-	private static String senderMail = "notification@soch-gov.in";
+	private static String senderMail = "soch.notification@naco.gov.in";
 	private static final String ANGLE_BRACKET_OPEN = "[";
 	private static final String ANGLE_BRACKET_CLOSED = "]";
 	private static final String RECIPIENT_KEY = "recipient";
