@@ -16,11 +16,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import gov.naco.soch.dto.MiniMasterDto;
 import gov.naco.soch.dto.NotificationEventSaveDto;
+import gov.naco.soch.entity.Facility;
 import gov.naco.soch.entity.MasterNotificationEventType;
 import gov.naco.soch.entity.NotificationEvent;
+import gov.naco.soch.entity.NotificationEventRole;
+import gov.naco.soch.entity.UserMaster;
 import gov.naco.soch.notification.mapper.NotificationMapper;
 import gov.naco.soch.notification.sender.EmailSenderService;
 import gov.naco.soch.notification.sender.SmsSenderService;
@@ -28,25 +32,37 @@ import gov.naco.soch.notification.sender.WhatsAppSenderService;
 import gov.naco.soch.projection.NotificationEventProjection;
 import gov.naco.soch.projection.NotificationProjection;
 import gov.naco.soch.projection.PlaceholderProjection;
+import gov.naco.soch.repository.FacilityRepository;
 import gov.naco.soch.repository.MasterNotificationEventTypeRepository;
 import gov.naco.soch.repository.NotificationEventPlaceholderRepository;
 import gov.naco.soch.repository.NotificationEventRepository;
+import gov.naco.soch.repository.NotificationEventRoleRepository;
+import gov.naco.soch.repository.UserMasterRepository;
 import gov.naco.soch.util.CommonConstants;
 
 @Service
 @Transactional
 public class NotificationService {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
-	
+
 	@Autowired
 	private NotificationEventRepository notificationEventRepository;
 	@Autowired
 	private NotificationEventPlaceholderRepository notificationEventPlaceholderRepository;
-	
+
 	@Autowired
 	private MasterNotificationEventTypeRepository notificationEventTypeRepository;
-	
+
+	@Autowired
+	private FacilityRepository facilityRepository;
+
+	@Autowired
+	private UserMasterRepository userMasterRepository;
+
+	@Autowired
+	private NotificationEventRoleRepository notificationEventRoleRepository;
+
 	@Autowired
 	private SmsSenderService smsService;
 	@Autowired
@@ -79,6 +95,42 @@ public class NotificationService {
 
 	}
 
+//	public void sendEmail(Map<String, Object> placeholderMap, Long eventId) {
+//		logger.debug("Inside of sendEmail() : NotificationService");
+//		NotificationEvent event = null;
+//		Optional<NotificationEvent> eventOpt = notificationEventRepository.findByEventIdAndIsEnabled(eventId, true);
+//		if (eventOpt.isPresent()) {
+//			event = eventOpt.get();
+//		}
+//		if (event.getIsSpecific() != null && event.getIsSpecific()) {
+//			logger.debug("Inside of if (event.getIsSpecific() != null && event.getIsSpecific()) : NotificationService");
+//			sendEmailToSpecificUsers(placeholderMap, event);
+//		} else {
+//			if(event.getMasterNotificationEventType()!=null) {
+//				senderMail = event.getMasterNotificationEventType().getSenderEmail();	
+//			}
+//			List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);
+//			List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
+//			List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
+//					.collect(Collectors.toList());
+//			notificationDetails.forEach(detail -> {
+//				String finalEmailTemplate = replacePlaceHolders(detail.getEmailTemplate(), placeholderMap,
+//						detail.getRecepient(), placeholders);
+//				String finalEmailSubject = replacePlaceHolders(detail.getEmailSubject(), placeholderMap,
+//						detail.getRecepient(), placeholders);
+//				try {
+//					if(!StringUtils.isBlank(detail.getEmailId())) {
+//						logger.info("Going to call emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",eventId, detail.getEmailId());
+//						emailService.sendEmail(detail.getEmailId(), finalEmailSubject, finalEmailTemplate,senderMail);	
+//						logger.info("Called emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",eventId, detail.getEmailId());
+//					}
+//				} catch (Exception e) {
+//					logger.error("Exception in sendEmail->{}",e);
+//				}
+//			});
+//		}
+//	}
+
 	public void sendEmail(Map<String, Object> placeholderMap, Long eventId) {
 		logger.debug("Inside of sendEmail() : NotificationService");
 		NotificationEvent event = null;
@@ -90,35 +142,106 @@ public class NotificationService {
 			logger.debug("Inside of if (event.getIsSpecific() != null && event.getIsSpecific()) : NotificationService");
 			sendEmailToSpecificUsers(placeholderMap, event);
 		} else {
-			if(event.getMasterNotificationEventType()!=null) {
-				senderMail = event.getMasterNotificationEventType().getSenderEmail();	
+			if (event.getMasterNotificationEventType() != null) {
+				senderMail = event.getMasterNotificationEventType().getSenderEmail();
 			}
 			List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);
 			List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
 			List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
 					.collect(Collectors.toList());
-			notificationDetails.forEach(detail -> {
-				String finalEmailTemplate = replacePlaceHolders(detail.getEmailTemplate(), placeholderMap,
-						detail.getRecepient(), placeholders);
-				String finalEmailSubject = replacePlaceHolders(detail.getEmailSubject(), placeholderMap,
-						detail.getRecepient(), placeholders);
-				try {
-					if(!StringUtils.isBlank(detail.getEmailId())) {
-						logger.info("Going to call emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",eventId, detail.getEmailId());
-						emailService.sendEmail(detail.getEmailId(), finalEmailSubject, finalEmailTemplate,senderMail);	
-						logger.info("Called emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",eventId, detail.getEmailId());
+
+			if (placeholderMap.containsKey(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY)
+					&& placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY) != null) {
+
+				Long facilityId = ((Integer) placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY)).longValue();
+				Optional<Facility> facilityOpt = facilityRepository.findById(facilityId);
+				if (facilityOpt.isPresent()) {
+					Facility f1 = facilityOpt.get();
+					Long ft1 = f1.getFacilityType().getId();
+
+					List<NotificationEventRole> eventRoles = notificationEventRoleRepository
+							.findEventRolesByEventId(eventId);
+					if (!CollectionUtils.isEmpty(eventRoles)) {
+
+						Map<String, String> eMailIdsList = new HashMap<>();
+
+						for (NotificationEventRole er : eventRoles) {
+
+							Long ft2 = er.getRole().getFacilityType().getId();
+
+							if (ft1.equals(ft2)) {
+								List<UserMaster> users = userMasterRepository
+										.findUsersByFacilityIdAndFacilityTypeIdAndRoleId(f1.getId(), ft2,
+												er.getRole().getId());
+								Map<String, String> eMailIds = users.stream()
+										.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getEmail));
+								if (!CollectionUtils.isEmpty(eMailIds)) {
+									eMailIdsList.putAll(eMailIds);
+								}
+							} else if ((!ft1.equals(ft2)) && (ft2.equals(2L) || ft2.equals(1L))) {
+								List<UserMaster> users = userMasterRepository.findUsersByFacilityId(f1.getSacsId());
+								Map<String, String> eMailIds = users.stream()
+										.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getEmail));
+								if (!CollectionUtils.isEmpty(eMailIds)) {
+									eMailIdsList.putAll(eMailIds);
+								}
+							}
+						}
+
+						if (!CollectionUtils.isEmpty(eMailIdsList)) {
+
+							for (Map.Entry<String, String> entry : eMailIdsList.entrySet()) {
+								String finalEmailTemplate = replacePlaceHolders(event.getEmailTemplate(),
+										placeholderMap, entry.getKey(), placeholders);
+								String finalEmailSubject = replacePlaceHolders(event.getEmailSubject(), placeholderMap,
+										entry.getKey(), placeholders);
+								try {
+									if (!StringUtils.isBlank(entry.getValue())) {
+										logger.info(
+												"Going to call emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",
+												eventId, entry.getValue());
+										emailService.sendEmail(entry.getValue(), finalEmailSubject, finalEmailTemplate,
+												senderMail);
+										logger.info(
+												"Called emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",
+												eventId, entry.getValue());
+									}
+								} catch (Exception e) {
+									logger.error("Exception in sendEmail->{}", e);
+								}
+							}
+						}
 					}
-				} catch (Exception e) {
-					logger.error("Exception in sendEmail->{}",e);
 				}
-			});
+			} else {
+				notificationDetails.forEach(detail -> {
+					String finalEmailTemplate = replacePlaceHolders(detail.getEmailTemplate(), placeholderMap,
+							detail.getRecepient(), placeholders);
+					String finalEmailSubject = replacePlaceHolders(detail.getEmailSubject(), placeholderMap,
+							detail.getRecepient(), placeholders);
+					try {
+						if (!StringUtils.isBlank(detail.getEmailId())) {
+							logger.info(
+									"Going to call emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",
+									eventId, detail.getEmailId());
+							emailService.sendEmail(detail.getEmailId(), finalEmailSubject, finalEmailTemplate,
+									senderMail);
+							logger.info("Called emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",
+									eventId, detail.getEmailId());
+						}
+					} catch (Exception e) {
+						logger.error("Exception in sendEmail->{}", e);
+					}
+				});
+			}
 		}
 	}
 
 	public void sendEmailToSpecificUsers(Map<String, Object> placeholderMap, NotificationEvent event) {
-		logger.info("Iniside of sendEmailToSpecificUsers(Map<String, Object> placeholderMap, NotificationEvent event) : NotificationService! ");
-        if(event.getMasterNotificationEventType()!=null)
-        senderMail = event.getMasterNotificationEventType().getSenderEmail();
+		logger.info(
+				"Iniside of sendEmailToSpecificUsers(Map<String, Object> placeholderMap, NotificationEvent event) : NotificationService! ");
+		if (event.getMasterNotificationEventType() != null)
+			senderMail = event.getMasterNotificationEventType().getSenderEmail();
 		List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(event.getEventId());
 		List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
 				.collect(Collectors.toList());
@@ -130,11 +253,13 @@ public class NotificationService {
 				placeholders);
 		List<String> toEmailList = (List<String>) placeholderMap
 				.get(CommonConstants.NOTIFICATION_TO_SPECIFIC_EMAILS_PLACEHOLDER);
-		logger.info("Email Ids-->{}:",toEmailList);
+		logger.info("Email Ids-->{}:", toEmailList);
 		toEmailList.forEach(emailId -> {
-			logger.info("Going to call SPECIFIC emailService.sendEmail with eventId-->{}: emailId-->{}:",event.getEventId(), emailId);
-			emailService.sendEmail(emailId, finalEmailSubject, finalEmailTemplate,senderMail);
-			logger.info("Called SPECIFIC emailService.sendEmail with eventId-->{}: emailId-->{}:",event.getEventId(), emailId);
+			logger.info("Going to call SPECIFIC emailService.sendEmail with eventId-->{}: emailId-->{}:",
+					event.getEventId(), emailId);
+			emailService.sendEmail(emailId, finalEmailSubject, finalEmailTemplate, senderMail);
+			logger.info("Called SPECIFIC emailService.sendEmail with eventId-->{}: emailId-->{}:", event.getEventId(),
+					emailId);
 		});
 
 	}
@@ -149,7 +274,7 @@ public class NotificationService {
 		smsEnabledNotificationDetails.forEach(detail -> {
 			String finalSmsTemplate = replacePlaceHolders(detail.getSmsTemplate(), placeholderMap,
 					detail.getRecepient(), placeholders);
-			smsService.sendSms(detail.getMobileNumber(),finalSmsTemplate);
+			smsService.sendSms(detail.getMobileNumber(), finalSmsTemplate);
 		});
 
 	}
@@ -185,19 +310,20 @@ public class NotificationService {
 
 	/**
 	 * getEventTypeList : method to fetch notification event type list
+	 * 
 	 * @return
 	 */
 	public List<MiniMasterDto> getEventTypeList() {
-		
+
 		List<MasterNotificationEventType> notificationTypes = notificationEventTypeRepository.findAll();
 		List<MiniMasterDto> notificationTypesList = new ArrayList<MiniMasterDto>();
-		if(notificationTypes!=null) {
-		for(MasterNotificationEventType eventType : notificationTypes) {
-			MiniMasterDto masterDto = new MiniMasterDto();
-			masterDto.setId(eventType.getId());
-			masterDto.setName(eventType.getName());
-			notificationTypesList.add(masterDto);
-		 }
+		if (notificationTypes != null) {
+			for (MasterNotificationEventType eventType : notificationTypes) {
+				MiniMasterDto masterDto = new MiniMasterDto();
+				masterDto.setId(eventType.getId());
+				masterDto.setName(eventType.getName());
+				notificationTypesList.add(masterDto);
+			}
 		}
 		return notificationTypesList;
 	}
