@@ -178,8 +178,16 @@ public class NotificationService {
 								if (!CollectionUtils.isEmpty(eMailIds)) {
 									eMailIdsList.putAll(eMailIds);
 								}
-							} else if ((!ft1.equals(ft2)) && (ft2.equals(2L) || ft2.equals(1L))) {
+							} else if ((!ft1.equals(ft2)) && ft2.equals(2L)) {
 								List<UserMaster> users = userMasterRepository.findUsersByFacilityId(f1.getSacsId());
+								Map<String, String> eMailIds = users.stream()
+										.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getEmail));
+								if (!CollectionUtils.isEmpty(eMailIds)) {
+									eMailIdsList.putAll(eMailIds);
+								}
+							} else if ((!ft1.equals(ft2)) && ft2.equals(1L)) {
+								List<UserMaster> users = userMasterRepository.findUsersByFacilityTypeIdAndRoleId(ft2,
+										er.getRole().getId());
 								Map<String, String> eMailIds = users.stream()
 										.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getEmail));
 								if (!CollectionUtils.isEmpty(eMailIds)) {
