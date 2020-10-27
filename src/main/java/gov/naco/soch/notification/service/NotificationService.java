@@ -153,7 +153,8 @@ public class NotificationService {
 			if (placeholderMap.containsKey(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY)
 					&& placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY) != null) {
 
-				Long facilityId = ((Integer) placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY)).longValue();
+				Long facilityId = ((Integer) placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY))
+						.longValue();
 				Optional<Facility> facilityOpt = facilityRepository.findById(facilityId);
 				if (facilityOpt.isPresent()) {
 					Facility f1 = facilityOpt.get();
@@ -179,11 +180,13 @@ public class NotificationService {
 									eMailIdsList.putAll(eMailIds);
 								}
 							} else if ((!ft1.equals(ft2)) && ft2.equals(2L)) {
-								List<UserMaster> users = userMasterRepository.findUsersByFacilityId(f1.getSacsId());
-								Map<String, String> eMailIds = users.stream()
-										.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getEmail));
-								if (!CollectionUtils.isEmpty(eMailIds)) {
-									eMailIdsList.putAll(eMailIds);
+								if (f1.getSacsId() != null) {
+									List<UserMaster> users = userMasterRepository.findUsersByFacilityId(f1.getSacsId());
+									Map<String, String> eMailIds = users.stream()
+											.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getEmail));
+									if (!CollectionUtils.isEmpty(eMailIds)) {
+										eMailIdsList.putAll(eMailIds);
+									}
 								}
 							} else if ((!ft1.equals(ft2)) && ft2.equals(1L)) {
 								List<UserMaster> users = userMasterRepository.findUsersByFacilityTypeIdAndRoleId(ft2,
