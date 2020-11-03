@@ -48,6 +48,7 @@ public class SmsSenderService {
 					.queryParam("signature", smsApiSignature);
 			HttpEntity<?> entity = new HttpEntity<>(headers);
 			logger.info("Going to send SMS to mobileNumber-->{}:", mobileNumber);
+			logger.info("SMS API URL :"+builder.toUriString());
 			restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, String.class);
 			logger.info("Sent SMS to mobileNumber-->{}:", mobileNumber);
 			// Message.creator(new PhoneNumber(mobileNumber), new PhoneNumber(sms_number),
