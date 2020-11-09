@@ -275,6 +275,21 @@ public class NotificationService {
 
 	}
 
+//	public void sendSms(Map<String, Object> placeholderMap, Long eventId) {
+//		List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);
+//		List<NotificationProjection> smsEnabledNotificationDetails = notificationDetails.stream()
+//				.filter(x -> x.getSmsEnabled() != null && x.getSmsEnabled() == true).collect(Collectors.toList());
+//		List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
+//		List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
+//				.collect(Collectors.toList());
+//		smsEnabledNotificationDetails.forEach(detail -> {
+//			String finalSmsTemplate = replacePlaceHolders(detail.getSmsTemplate(), placeholderMap,
+//					detail.getRecepient(), placeholders);
+//			smsService.sendSms(detail.getMobileNumber(), finalSmsTemplate);
+//		});
+//
+//	}
+
 	public void sendSms(Map<String, Object> placeholderMap, Long eventId) {
 		List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);
 		List<NotificationProjection> smsEnabledNotificationDetails = notificationDetails.stream()
@@ -282,13 +297,108 @@ public class NotificationService {
 		List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
 		List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
 				.collect(Collectors.toList());
-		smsEnabledNotificationDetails.forEach(detail -> {
-			String finalSmsTemplate = replacePlaceHolders(detail.getSmsTemplate(), placeholderMap,
-					detail.getRecepient(), placeholders);
-			smsService.sendSms(detail.getMobileNumber(), finalSmsTemplate);
-		});
 
+		NotificationEvent event = null;
+		Optional<NotificationEvent> eventOpt = notificationEventRepository.findByEventIdAndIsEnabled(eventId, true);
+		if (eventOpt.isPresent() && placeholderMap.containsKey(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY)
+				&& placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY) != null) {
+
+			event = eventOpt.get();
+
+			Long facilityId = ((Integer) placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY))
+					.longValue();
+			Optional<Facility> facilityOpt = facilityRepository.findById(facilityId);
+			if (facilityOpt.isPresent()) {
+				Facility f1 = facilityOpt.get();
+				Long ft1 = f1.getFacilityType().getId();
+
+				List<NotificationEventRole> eventRoles = notificationEventRoleRepository
+						.findEventRolesByEventId(eventId);
+				if (!CollectionUtils.isEmpty(eventRoles)) {
+
+					Map<String, String> mobileNumbersList = new HashMap<>();
+
+					for (NotificationEventRole er : eventRoles) {
+
+						Long ft2 = er.getRole().getFacilityType().getId();
+
+						if (ft1.equals(ft2)) {
+							List<UserMaster> users = userMasterRepository
+									.findUsersByFacilityIdAndFacilityTypeIdAndRoleId(f1.getId(), ft2,
+											er.getRole().getId());
+							Map<String, String> mobileNumbers = users.stream()
+									.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getMobileNumber));
+							if (!CollectionUtils.isEmpty(mobileNumbers)) {
+								mobileNumbersList.putAll(mobileNumbers);
+							}
+						} else if ((!ft1.equals(ft2)) && ft2.equals(2L)) {
+							if (f1.getSacsId() != null) {
+								List<UserMaster> users = userMasterRepository.findUsersByFacilityId(f1.getSacsId());
+								Map<String, String> mobileNumbers = users.stream().collect(
+										Collectors.toMap(UserMaster::getFirstname, UserMaster::getMobileNumber));
+								if (!CollectionUtils.isEmpty(mobileNumbers)) {
+									mobileNumbersList.putAll(mobileNumbers);
+								}
+							}
+						} else if ((!ft1.equals(ft2)) && ft2.equals(1L)) {
+							List<UserMaster> users = userMasterRepository.findUsersByFacilityTypeIdAndRoleId(ft2,
+									er.getRole().getId());
+							Map<String, String> mobileNumbers = users.stream()
+									.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getMobileNumber));
+							if (!CollectionUtils.isEmpty(mobileNumbers)) {
+								mobileNumbersList.putAll(mobileNumbers);
+							}
+						}
+					}
+
+					if (!CollectionUtils.isEmpty(mobileNumbersList)) {
+
+						for (Map.Entry<String, String> entry : mobileNumbersList.entrySet()) {
+
+							String finalSmsTemplate = replacePlaceHolders(event.getSmsTemplate(), placeholderMap,
+									entry.getValue(), placeholders);
+
+							try {
+								if (!StringUtils.isBlank(entry.getValue())) {
+									logger.info(
+											"Going to call smsService.sendSms with eventId-->{}: detail.getRecepient()-->{}:",
+											eventId, entry.getValue());
+									smsService.sendSms(entry.getValue(), finalSmsTemplate);
+									logger.info(
+											"Called smsService.sendSms with eventId-->{}: detail.getRecepient()-->{}:",
+											eventId, entry.getValue());
+								}
+							} catch (Exception e) {
+								logger.error("Exception in sendSms->{}", e);
+							}
+						}
+					}
+				}
+			}
+		} else {
+			smsEnabledNotificationDetails.forEach(detail -> {
+				String finalSmsTemplate = replacePlaceHolders(detail.getSmsTemplate(), placeholderMap,
+						detail.getRecepient(), placeholders);
+				smsService.sendSms(detail.getMobileNumber(), finalSmsTemplate);
+			});
+		}
 	}
+
+//	public void sendWhatsapp(Map<String, Object> placeholderMap, Long eventId) {
+//		List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);
+//		List<NotificationProjection> whatsappEnabledNotificationDetails = notificationDetails.stream()
+//				.filter(x -> x.getWhatsappEnabled() != null && x.getWhatsappEnabled() == true)
+//				.collect(Collectors.toList());
+//		List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
+//		List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
+//				.collect(Collectors.toList());
+//		whatsappEnabledNotificationDetails.forEach(detail -> {
+//			String finalWhatsappTemplate = replacePlaceHolders(detail.getWhatsappTemplate(), placeholderMap,
+//					detail.getRecepient(), placeholders);
+//			// whatsAppService.sendWhatsApp(detail.getMobileNumber(),finalWhatsappTemplate);
+//		});
+//
+//	}
 
 	public void sendWhatsapp(Map<String, Object> placeholderMap, Long eventId) {
 		List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);
@@ -298,12 +408,90 @@ public class NotificationService {
 		List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
 		List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
 				.collect(Collectors.toList());
-		whatsappEnabledNotificationDetails.forEach(detail -> {
-			String finalWhatsappTemplate = replacePlaceHolders(detail.getWhatsappTemplate(), placeholderMap,
-					detail.getRecepient(), placeholders);
-			// whatsAppService.sendWhatsApp(detail.getMobileNumber(),finalWhatsappTemplate);
-		});
 
+		NotificationEvent event = null;
+		Optional<NotificationEvent> eventOpt = notificationEventRepository.findByEventIdAndIsEnabled(eventId, true);
+		if (eventOpt.isPresent() && placeholderMap.containsKey(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY)
+				&& placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY) != null) {
+
+			event = eventOpt.get();
+
+			Long facilityId = ((Integer) placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY))
+					.longValue();
+			Optional<Facility> facilityOpt = facilityRepository.findById(facilityId);
+			if (facilityOpt.isPresent()) {
+				Facility f1 = facilityOpt.get();
+				Long ft1 = f1.getFacilityType().getId();
+
+				List<NotificationEventRole> eventRoles = notificationEventRoleRepository
+						.findEventRolesByEventId(eventId);
+				if (!CollectionUtils.isEmpty(eventRoles)) {
+
+					Map<String, String> mobileNumbersList = new HashMap<>();
+
+					for (NotificationEventRole er : eventRoles) {
+
+						Long ft2 = er.getRole().getFacilityType().getId();
+
+						if (ft1.equals(ft2)) {
+							List<UserMaster> users = userMasterRepository
+									.findUsersByFacilityIdAndFacilityTypeIdAndRoleId(f1.getId(), ft2,
+											er.getRole().getId());
+							Map<String, String> mobileNumbers = users.stream()
+									.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getMobileNumber));
+							if (!CollectionUtils.isEmpty(mobileNumbers)) {
+								mobileNumbersList.putAll(mobileNumbers);
+							}
+						} else if ((!ft1.equals(ft2)) && ft2.equals(2L)) {
+							if (f1.getSacsId() != null) {
+								List<UserMaster> users = userMasterRepository.findUsersByFacilityId(f1.getSacsId());
+								Map<String, String> mobileNumbers = users.stream().collect(
+										Collectors.toMap(UserMaster::getFirstname, UserMaster::getMobileNumber));
+								if (!CollectionUtils.isEmpty(mobileNumbers)) {
+									mobileNumbersList.putAll(mobileNumbers);
+								}
+							}
+						} else if ((!ft1.equals(ft2)) && ft2.equals(1L)) {
+							List<UserMaster> users = userMasterRepository.findUsersByFacilityTypeIdAndRoleId(ft2,
+									er.getRole().getId());
+							Map<String, String> mobileNumbers = users.stream()
+									.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getMobileNumber));
+							if (!CollectionUtils.isEmpty(mobileNumbers)) {
+								mobileNumbersList.putAll(mobileNumbers);
+							}
+						}
+					}
+
+					if (!CollectionUtils.isEmpty(mobileNumbersList)) {
+						for (Map.Entry<String, String> entry : mobileNumbersList.entrySet()) {
+
+							String finalWhatsappTemplate = replacePlaceHolders(event.getWhatsappTemplate(),
+									placeholderMap, entry.getValue(), placeholders);
+
+							try {
+								if (!StringUtils.isBlank(entry.getValue())) {
+									logger.info(
+											"Going to call whatsAppService.sendWhatsApp with eventId-->{}: detail.getRecepient()-->{}:",
+											eventId, entry.getValue());
+//									whatsAppService.sendWhatsApp(entry.getValue(), finalWhatsappTemplate);
+									logger.info(
+											"Called whatsAppService.sendWhatsApp with eventId-->{}: detail.getRecepient()-->{}:",
+											eventId, entry.getValue());
+								}
+							} catch (Exception e) {
+								logger.error("Exception in sendSms->{}", e);
+							}
+						}
+					}
+				}
+			} else {
+				whatsappEnabledNotificationDetails.forEach(detail -> {
+					String finalWhatsappTemplate = replacePlaceHolders(detail.getWhatsappTemplate(), placeholderMap,
+							detail.getRecepient(), placeholders);
+//					whatsAppService.sendWhatsApp(detail.getMobileNumber(), finalWhatsappTemplate);
+				});
+			}
+		}
 	}
 
 	private String replacePlaceHolders(String template, Map<String, Object> placeholderMap, String recepient,
