@@ -181,7 +181,8 @@ public class NotificationService {
 								}
 							} else if ((!ft1.equals(ft2)) && ft2.equals(2L)) {
 								if (f1.getSacsId() != null) {
-									List<UserMaster> users = userMasterRepository.findUsersByFacilityId(f1.getSacsId());
+									List<UserMaster> users = userMasterRepository
+											.findUsersByFacilityIdAndRole(f1.getSacsId(), er.getRole().getId());
 									Map<String, String> eMailIds = users.stream()
 											.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getEmail));
 									if (!CollectionUtils.isEmpty(eMailIds)) {
@@ -322,32 +323,9 @@ public class NotificationService {
 
 						Long ft2 = er.getRole().getFacilityType().getId();
 
-						if (ft1.equals(ft2)) {
-							List<UserMaster> users = userMasterRepository
-									.findUsersByFacilityIdAndFacilityTypeIdAndRoleId(f1.getId(), ft2,
-											er.getRole().getId());
-							Map<String, String> mobileNumbers = users.stream()
-									.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getMobileNumber));
-							if (!CollectionUtils.isEmpty(mobileNumbers)) {
-								mobileNumbersList.putAll(mobileNumbers);
-							}
-						} else if ((!ft1.equals(ft2)) && ft2.equals(2L)) {
-							if (f1.getSacsId() != null) {
-								List<UserMaster> users = userMasterRepository.findUsersByFacilityId(f1.getSacsId());
-								Map<String, String> mobileNumbers = users.stream().collect(
-										Collectors.toMap(UserMaster::getFirstname, UserMaster::getMobileNumber));
-								if (!CollectionUtils.isEmpty(mobileNumbers)) {
-									mobileNumbersList.putAll(mobileNumbers);
-								}
-							}
-						} else if ((!ft1.equals(ft2)) && ft2.equals(1L)) {
-							List<UserMaster> users = userMasterRepository.findUsersByFacilityTypeIdAndRoleId(ft2,
-									er.getRole().getId());
-							Map<String, String> mobileNumbers = users.stream()
-									.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getMobileNumber));
-							if (!CollectionUtils.isEmpty(mobileNumbers)) {
-								mobileNumbersList.putAll(mobileNumbers);
-							}
+						Map<String, String> userMobileNumberList = getEventRoleUserMobileNumber(f1, ft1, er, ft2);
+						if (!CollectionUtils.isEmpty(userMobileNumberList)) {
+							mobileNumbersList.putAll(userMobileNumberList);
 						}
 					}
 
@@ -433,32 +411,9 @@ public class NotificationService {
 
 						Long ft2 = er.getRole().getFacilityType().getId();
 
-						if (ft1.equals(ft2)) {
-							List<UserMaster> users = userMasterRepository
-									.findUsersByFacilityIdAndFacilityTypeIdAndRoleId(f1.getId(), ft2,
-											er.getRole().getId());
-							Map<String, String> mobileNumbers = users.stream()
-									.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getMobileNumber));
-							if (!CollectionUtils.isEmpty(mobileNumbers)) {
-								mobileNumbersList.putAll(mobileNumbers);
-							}
-						} else if ((!ft1.equals(ft2)) && ft2.equals(2L)) {
-							if (f1.getSacsId() != null) {
-								List<UserMaster> users = userMasterRepository.findUsersByFacilityId(f1.getSacsId());
-								Map<String, String> mobileNumbers = users.stream().collect(
-										Collectors.toMap(UserMaster::getFirstname, UserMaster::getMobileNumber));
-								if (!CollectionUtils.isEmpty(mobileNumbers)) {
-									mobileNumbersList.putAll(mobileNumbers);
-								}
-							}
-						} else if ((!ft1.equals(ft2)) && ft2.equals(1L)) {
-							List<UserMaster> users = userMasterRepository.findUsersByFacilityTypeIdAndRoleId(ft2,
-									er.getRole().getId());
-							Map<String, String> mobileNumbers = users.stream()
-									.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getMobileNumber));
-							if (!CollectionUtils.isEmpty(mobileNumbers)) {
-								mobileNumbersList.putAll(mobileNumbers);
-							}
+						Map<String, String> userMobileNumberList = getEventRoleUserMobileNumber(f1, ft1, er, ft2);
+						if (!CollectionUtils.isEmpty(userMobileNumberList)) {
+							mobileNumbersList.putAll(userMobileNumberList);
 						}
 					}
 
@@ -527,4 +482,29 @@ public class NotificationService {
 		return notificationTypesList;
 	}
 
+	private Map<String, String> getEventRoleUserMobileNumber(Facility f1, Long ft1, NotificationEventRole er,
+			Long ft2) {
+
+		if (ft1.equals(ft2)) {
+			List<UserMaster> users = userMasterRepository.findUsersByFacilityIdAndFacilityTypeIdAndRoleId(f1.getId(),
+					ft2, er.getRole().getId());
+			Map<String, String> mobileNumbers = users.stream()
+					.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getMobileNumber));
+			return mobileNumbers;
+		} else if ((!ft1.equals(ft2)) && ft2.equals(2L)) {
+			if (f1.getSacsId() != null) {
+				List<UserMaster> users = userMasterRepository.findUsersByFacilityIdAndRole(f1.getSacsId(),
+						er.getRole().getId());
+				Map<String, String> mobileNumbers = users.stream()
+						.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getMobileNumber));
+				return mobileNumbers;
+			}
+		} else if ((!ft1.equals(ft2)) && ft2.equals(1L)) {
+			List<UserMaster> users = userMasterRepository.findUsersByFacilityTypeIdAndRoleId(ft2, er.getRole().getId());
+			Map<String, String> mobileNumbers = users.stream()
+					.collect(Collectors.toMap(UserMaster::getFirstname, UserMaster::getMobileNumber));
+			return mobileNumbers;
+		}
+		return null;
+	}
 }
