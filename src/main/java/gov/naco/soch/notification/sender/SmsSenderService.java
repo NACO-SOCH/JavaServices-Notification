@@ -25,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
@@ -57,10 +58,10 @@ public class SmsSenderService {
 			if (mobileNumber.length() <= 10) {
 				mobileNumber = "91" + mobileNumber;
 			}
-			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(smsApiEndpoint)
+			UriComponents builder = UriComponentsBuilder.fromHttpUrl(smsApiEndpoint)
 					.queryParam("username", smsApiUserName).queryParam("pin", smsApiPin)
 					.queryParam("message", smsTemplate).queryParam("mnumber", mobileNumber)
-					.queryParam("signature", smsApiSignature);
+					.queryParam("signature", smsApiSignature).build();
 			HttpEntity<?> entity = new HttpEntity<>(headers);
 			//---------------------
 			logger.info("Going to send SMS to mobileNumber-->{}:", mobileNumber);
