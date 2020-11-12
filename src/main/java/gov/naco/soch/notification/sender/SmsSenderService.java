@@ -56,17 +56,18 @@ public class SmsSenderService {
 
 	public void sendSms(String mobileNumber, String smsTemplate) {
 		try {
-			HttpHeaders headers = new HttpHeaders();
-			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			//HttpHeaders headers = new HttpHeaders();
+			//headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 			if (mobileNumber.length() <= 10) {
 				mobileNumber = "91" + mobileNumber;
 			}
-			String encodedMessageTemplate = URLEncoder.encode(smsTemplate, StandardCharsets.UTF_8.name());
+			//String encodedMessageTemplate = URLEncoder.encode(smsTemplate, StandardCharsets.UTF_8.name());
+			String encodedMessageTemplate = "TextMessage";
 			UriComponents builder = UriComponentsBuilder.fromHttpUrl(smsApiEndpoint)
 					.queryParam("username", smsApiUserName).queryParam("pin", smsApiPin)
 					.queryParam("message", encodedMessageTemplate).queryParam("mnumber", mobileNumber)
 					.queryParam("signature", smsApiSignature).build();
-			HttpEntity<?> entity = new HttpEntity<>(headers);
+			//HttpEntity<?> entity = new HttpEntity<>(headers);
 			// ---------------------
 			logger.info("Going to send SMS to mobileNumber-->{}:", mobileNumber);
 			logger.info("SMS API URL :" + builder.toUriString());
