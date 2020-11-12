@@ -1,5 +1,8 @@
 package gov.naco.soch.notification.sender;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 import javax.net.ssl.SSLContext;
 
 import org.apache.http.config.Registry;
@@ -58,39 +61,40 @@ public class SmsSenderService {
 			if (mobileNumber.length() <= 10) {
 				mobileNumber = "91" + mobileNumber;
 			}
+			String encodedMessageTemplate = URLEncoder.encode(smsTemplate, StandardCharsets.UTF_8.name());
 			UriComponents builder = UriComponentsBuilder.fromHttpUrl(smsApiEndpoint)
 					.queryParam("username", smsApiUserName).queryParam("pin", smsApiPin)
-					.queryParam("message", smsTemplate).queryParam("mnumber", mobileNumber)
+					.queryParam("message", encodedMessageTemplate).queryParam("mnumber", mobileNumber)
 					.queryParam("signature", smsApiSignature).build();
 			HttpEntity<?> entity = new HttpEntity<>(headers);
-			//---------------------
+			// ---------------------
 			logger.info("Going to send SMS to mobileNumber-->{}:", mobileNumber);
-			logger.info("SMS API URL :"+builder.toUriString());
+			logger.info("SMS API URL :" + builder.toUriString());
 			TrustStrategy acceptingTrustStrategy = (cert, authType) -> true;
 			SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy).build();
-			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, 
-				      NoopHostnameVerifier.INSTANCE);
-			Registry<ConnectionSocketFactory> socketFactoryRegistry = 
-				      RegistryBuilder.<ConnectionSocketFactory> create()
-				      .register("https", sslsf)
-				      .register("http", new PlainConnectionSocketFactory())
-				      .build();
-			BasicHttpClientConnectionManager connectionManager = 
-				      new BasicHttpClientConnectionManager(socketFactoryRegistry);
-				    CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(sslsf)
-				      .setConnectionManager(connectionManager).build();
-				    HttpComponentsClientHttpRequestFactory requestFactory = 
-				    	      new HttpComponentsClientHttpRequestFactory(httpClient);
-				    ResponseEntity<String> response = new RestTemplate(requestFactory)
-				    	      .exchange(builder.toUriString(), HttpMethod.GET, null, String.class);
-				   
-				    logger.info("Response : "+response);
-				    logger.info("SMS API Response Code :"+response.getStatusCode().value());
-				    
-			//---------------------
-		/*	logger.info("Going to send SMS to mobileNumber-->{}:", mobileNumber);
-			logger.info("SMS API URL :"+builder.toUriString());
-			restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, String.class);*/
+			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext,
+					NoopHostnameVerifier.INSTANCE);
+			Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+					.register("https", sslsf).register("http", new PlainConnectionSocketFactory()).build();
+			BasicHttpClientConnectionManager connectionManager = new BasicHttpClientConnectionManager(
+					socketFactoryRegistry);
+			CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(sslsf)
+					.setConnectionManager(connectionManager).build();
+			HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(
+					httpClient);
+			ResponseEntity<String> response = new RestTemplate(requestFactory).exchange(builder.toUriString(),
+					HttpMethod.GET, null, String.class);
+
+			logger.info("Response : " + response);
+			logger.info("SMS API Response Code :" + response.getStatusCode().value());
+
+			// ---------------------
+			/*
+			 * logger.info("Going to send SMS to mobileNumber-->{}:", mobileNumber);
+			 * logger.info("SMS API URL :"+builder.toUriString());
+			 * restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity,
+			 * String.class);
+			 */
 			logger.info("Sent SMS to mobileNumber-->{}:", mobileNumber);
 			// Message.creator(new PhoneNumber(mobileNumber), new PhoneNumber(sms_number),
 			// smsTemplate).create();
