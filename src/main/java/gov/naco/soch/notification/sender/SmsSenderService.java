@@ -61,8 +61,7 @@ public class SmsSenderService {
 			if (mobileNumber.length() <= 10) {
 				mobileNumber = "91" + mobileNumber;
 			}
-			//String encodedMessageTemplate = URLEncoder.encode(smsTemplate, StandardCharsets.UTF_8.name());
-			String encodedMessageTemplate = "TextMessage";
+			String encodedMessageTemplate = URLEncoder.encode(smsTemplate, StandardCharsets.UTF_8.name());
 			UriComponents builder = UriComponentsBuilder.fromHttpUrl(smsApiEndpoint)
 					.queryParam("username", smsApiUserName).queryParam("pin", smsApiPin)
 					.queryParam("message", encodedMessageTemplate).queryParam("mnumber", mobileNumber)
