@@ -332,10 +332,9 @@ public class NotificationService {
 					if (!CollectionUtils.isEmpty(mobileNumbersList)) {
 
 						for (Map.Entry<String, String> entry : mobileNumbersList.entrySet()) {
-
+							
 							String finalSmsTemplate = replacePlaceHolders(event.getSmsTemplate(), placeholderMap,
-									entry.getValue(), placeholders);
-
+									entry.getKey(), placeholders);
 							try {
 								if (!StringUtils.isBlank(entry.getValue())) {
 									logger.info(
