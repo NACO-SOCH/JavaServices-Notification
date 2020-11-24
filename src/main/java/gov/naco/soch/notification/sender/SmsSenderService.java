@@ -48,6 +48,12 @@ public class SmsSenderService {
 
 	@Value("${notificationSmsApiSignature}")
 	private String smsApiSignature;
+	
+	@Value("${notificationSmsDtlEntityId}")
+	private String smsDltEntityId;
+	
+	@Value("${notificationSmsdltTemplateId}")
+	private String notificationSmsdltTemplateId;
 
 	private static final Logger logger = LoggerFactory.getLogger(SmsSenderService.class);
 
@@ -65,7 +71,10 @@ public class SmsSenderService {
 			UriComponents builder = UriComponentsBuilder.fromHttpUrl(smsApiEndpoint)
 					.queryParam("username", smsApiUserName).queryParam("pin", smsApiPin)
 					.queryParam("message", encodedMessageTemplate).queryParam("mnumber", mobileNumber)
-					.queryParam("signature", smsApiSignature).build();
+					.queryParam("signature", smsApiSignature)
+					.queryParam("dlt_entity_id", smsDltEntityId)
+					.queryParam("dlt_template_id", notificationSmsdltTemplateId)
+					.build();
 			//HttpEntity<?> entity = new HttpEntity<>(headers);
 			// ---------------------
 			logger.info("Going to send SMS to mobileNumber-->{}:", mobileNumber);
