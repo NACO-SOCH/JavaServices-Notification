@@ -1,5 +1,6 @@
 package gov.naco.soch.notification.sender;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -69,6 +70,8 @@ public class SmsSenderService {
 				mobileNumber = "91" + mobileNumber;
 			}
 			String encodedMessageTemplate = URLEncoder.encode(smsTemplate, StandardCharsets.UTF_8.name());
+			encodedMessageTemplate = encodedMessageTemplate.replace("%2C", ",");
+			logger.info("********************* DECODED MESSAGE   ************** "+encodedMessageTemplate);
 			UriComponents builder = UriComponentsBuilder.fromHttpUrl(smsApiEndpoint)
 					.queryParam("username", smsApiUserName).queryParam("pin", smsApiPin)
 					.queryParam("message", encodedMessageTemplate).queryParam("mnumber", mobileNumber)
