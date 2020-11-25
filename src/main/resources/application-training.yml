@@ -43,5 +43,5 @@ notificationSmsApiEndpoint: https://dummyurl/dummyurl/dummyurl
 notificationSmsApiUsername: dummyuser
 notificationSmsApiPin: dummypin
 notificationSmsApiSignature: SENDERID
-notificationSmsDtlEntityId: dlt_entity_id
-notificationSmsdltTemplateId: tmplte_entity_Id
+notificationSmsDltEntityId: dlt_entity_id
+notificationSmsDltTemplateId: tmplte_entity_Id
