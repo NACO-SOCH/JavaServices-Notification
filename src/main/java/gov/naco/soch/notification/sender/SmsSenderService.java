@@ -49,11 +49,12 @@ public class SmsSenderService {
 	@Value("${notificationSmsApiSignature}")
 	private String smsApiSignature;
 	
-	@Value("${notificationSmsDtlEntityId}")
+	@Value("${notificationSmsDltEntityId}")
 	private String smsDltEntityId;
 	
-	@Value("${notificationSmsdltTemplateId}")
+	@Value("${notificationSmsDltTemplateId}")
 	private String notificationSmsdltTemplateId;
+	
 
 	private static final Logger logger = LoggerFactory.getLogger(SmsSenderService.class);
 
