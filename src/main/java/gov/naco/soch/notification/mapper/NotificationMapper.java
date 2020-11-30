@@ -31,7 +31,26 @@ public class NotificationMapper {
 		if (notificationEventSaveDto.getWhatsAppTemplate() != null) {
 			notificationEvent.setWhatsappTemplate(notificationEventSaveDto.getWhatsAppTemplate());
 		}
+		if(notificationEventSaveDto.getWebTemplate() != null) {
+			notificationEvent.setWebTemplate(notificationEventSaveDto.getWebTemplate());
+		}
+		if(notificationEventSaveDto.getIsEmailEnabled() != null) {
+		notificationEvent.setIsEmailEnabled(notificationEventSaveDto.getIsEmailEnabled());
+		}
+		if(notificationEventSaveDto.getIsWhatsappEnabled() != null) {
+			notificationEvent.setIsWhatsappEnabled(notificationEventSaveDto.getIsWhatsappEnabled());
+			}
+		if(notificationEventSaveDto.getIsSmsEnabled() != null) {
+			notificationEvent.setIsSmsEnabled(notificationEventSaveDto.getIsSmsEnabled());
+			}
+		if(notificationEventSaveDto.getIsWebEnabled() != null) {
+			notificationEvent.setIsWebEnabled(notificationEventSaveDto.getIsWebEnabled());
+			}
+		
 		notificationEvent.setIsEnabled(notificationEventSaveDto.getEnable());
+		if(notificationEventSaveDto.getActionUrl() != null) {
+		notificationEvent.setActionUrl(notificationEventSaveDto.getActionUrl());
+		}
 		Set<NotificationEventRole> newRoles = new HashSet<>();
 		if(notificationEvent.getNotificationEventRoles()!=null)
 		notificationEvent.getNotificationEventRoles().clear();
