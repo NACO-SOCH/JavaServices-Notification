@@ -30,5 +30,10 @@ public class WebUserNotificationService {
 		}
 		return webUserNotificationDto;
 	}
+	public Integer getWebNotificationCount(Integer userId) {
+		logger.info("Inside of getWebnotificationCountFuntion: WebUserNotificationService ");
+		Integer notificationCount = webUserNotificationRepository.getWebNotificationCount(userId);
+		return notificationCount;
+	}
 
 }

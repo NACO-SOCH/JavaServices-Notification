@@ -1,18 +1,23 @@
 package gov.naco.soch.notification.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.naco.soch.dto.WebUserNotificationDto;
 import gov.naco.soch.notification.service.WebUserNotificationService;
+import gov.naco.soch.projection.NotificationEventProjection;
 /**
  * 
  * @author Rishad Basheer(u76718)
@@ -38,6 +43,19 @@ public class WebNotificationController {
 		return new ResponseEntity<WebUserNotificationDto>(responseDto,HttpStatus.INTERNAL_SERVER_ERROR);
 		
 	}
+	
+	@GetMapping("/count")
+	public Integer getNotificationCount(@RequestParam Integer userId) {
+		try {
+		return webUserNotificationService.getWebNotificationCount(userId);
+		}
+		catch (Exception e) {
+			logger.error("Exception :"+e.getMessage());
+		}
+		return null;
+
+	}
+
 	
 	
 }
