@@ -1,14 +1,21 @@
 package gov.naco.soch.notification.mapper;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import gov.naco.soch.dto.MasterDto;
 import gov.naco.soch.dto.NotificationEventSaveDto;
+import gov.naco.soch.dto.UserMasterDto;
+import gov.naco.soch.dto.WebNotificationListDto;
+import gov.naco.soch.dto.WebUserNotificationDto;
 import gov.naco.soch.entity.MasterNotificationEventType;
 import gov.naco.soch.entity.NotificationEvent;
 import gov.naco.soch.entity.NotificationEventRole;
 import gov.naco.soch.entity.Role;
+import gov.naco.soch.projection.UserListProjection;
+import gov.naco.soch.projection.WebNotificationProjection;
 
 public class NotificationMapper {
 
@@ -73,6 +80,23 @@ public class NotificationMapper {
 		notificationEvent.setMasterNotificationEventType(null);
 		return notificationEvent;
 
+	}
+	
+	
+	public static List<WebUserNotificationDto> mapWebNotificationListProjectionToWebUserNotificationDtoList(List<WebNotificationProjection> WebNotificationProjectionList) {
+		List<WebUserNotificationDto> list = new ArrayList<>();
+		for (WebNotificationProjection webNotification : WebNotificationProjectionList) {
+			WebUserNotificationDto webUserNotificationDto = new WebUserNotificationDto();
+			webUserNotificationDto.setId(webNotification.getId());
+			webUserNotificationDto.setIcon(webNotification.getIcon());
+			webUserNotificationDto.setFinalMessage(webNotification.getFinalMessage());
+			webUserNotificationDto.setFinalUrl(webNotification.getFinalUrl());
+			webUserNotificationDto.setIsRead(webNotification.getIsRead());
+			webUserNotificationDto.setIsDelete(webNotification.getIsDelete());
+			webUserNotificationDto.setNoOfDays(webNotification.getNoOfDays());
+			list.add(webUserNotificationDto);
+		}
+		return list;
 	}
 
 }

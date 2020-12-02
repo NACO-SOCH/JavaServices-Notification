@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
+import gov.naco.soch.dto.WebNotificationListDto;
 import gov.naco.soch.dto.WebUserNotificationDto;
 import gov.naco.soch.notification.service.WebUserNotificationService;
 import gov.naco.soch.projection.NotificationEventProjection;
@@ -55,6 +56,15 @@ public class WebNotificationController {
 		return null;
 
 	}
+	
+
+	@GetMapping("/list")
+	public @ResponseBody WebNotificationListDto getAllWebNotifications(@RequestParam(required = false) Integer pageNumber,
+			@RequestParam(required = false) Integer pageSize, @RequestParam("userId") Integer userId) {
+		logger.debug("getAllWebNotifications method called");
+		return webUserNotificationService.getAllWebNotification(pageNumber, pageSize , userId);
+	}
+
 
 	
 	
