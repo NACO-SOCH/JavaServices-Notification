@@ -44,3 +44,4 @@ notificationSmsApiEndpoint: https://dummyurl/dummyurl/dummyurl
 notificationSmsApiUsername: dummyuser
 notificationSmsApiPin: dummypin
 notificationSmsApiSignature: SENDERID
+delete.cron: 0 0 0 * * ?

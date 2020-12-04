@@ -92,6 +92,12 @@ public class WebUserNotificationService {
 		return webNotificationListDto;
 		
 	}
+	public boolean deleteWebUserNotifications() {
+		logger.info("Inside of deleteWebUserNotifications() : WebUserNotificationService");
+		webUserNotificationRepository.deleteAll();
+		logger.info("After deleteWebUserNotifications : WebUserNotificationService ");
+		return false;
+	}
 	
 	
 }

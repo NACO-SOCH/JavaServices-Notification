@@ -22,12 +22,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableJpaRepositories("gov.naco.soch.repository")
 @EntityScan("gov.naco.soch.entity")
 @ComponentScan(basePackages = { "gov.naco.soch" })
+@EnableScheduling
 //@PropertySource("classpath:application-${spring.profiles.active}.yml")
 public class NotificationServiceApplication extends SpringBootServletInitializer {
 
