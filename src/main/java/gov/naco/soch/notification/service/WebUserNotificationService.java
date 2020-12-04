@@ -99,5 +99,15 @@ public class WebUserNotificationService {
 		return false;
 	}
 	
-	
+	public void updateRead(Long id) {
+		try {
+			
+			 webUserNotificationRepository.updateReadById(id);
+			logger.debug("notification with id "+id + " updated ");
+			
+		}catch (Exception e) {
+			logger.error(e.toString());
+		}
+	}
+
 }
