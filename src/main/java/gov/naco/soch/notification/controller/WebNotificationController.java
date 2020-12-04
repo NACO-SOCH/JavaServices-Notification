@@ -1,6 +1,6 @@
 package gov.naco.soch.notification.controller;
 
-
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import gov.naco.soch.dto.WebNotificationListDto;
 import gov.naco.soch.dto.WebUserNotificationDto;
 import gov.naco.soch.notification.service.WebUserNotificationService;
+import gov.naco.soch.projection.NotificationEventProjection;
 /**
  * 
  * @author Rishad Basheer(u76718)
@@ -55,24 +56,23 @@ public class WebNotificationController {
 			logger.error("Exception :"+e.getMessage());
 		}
 		return null;
+
 	}
 	
-	
+
 	@GetMapping("/list")
 	public @ResponseBody WebNotificationListDto getAllWebNotifications(@RequestParam(required = false) Integer pageNumber,
 			@RequestParam(required = false) Integer pageSize, @RequestParam("userId") Integer userId) {
 		logger.debug("getAllWebNotifications method called");
 		return webUserNotificationService.getAllWebNotification(pageNumber, pageSize , userId);
 	}
-	
+
 	@PutMapping("/updateread/{Id}")
 	public void updateReadTrue(@PathVariable Long Id) {
 		
 		logger.debug("updateReadTrue method is invoked");
 		 webUserNotificationService.updateRead(Id);
 	}
-
-
 	
 	
 }
