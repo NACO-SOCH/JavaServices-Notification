@@ -303,6 +303,9 @@ public class NotificationService {
 		NotificationEvent event = null;
 		Optional<NotificationEvent> eventOpt = notificationEventRepository.findByEventIdAndIsEnabled(eventId, true);
 		//For specific users
+		logger.info("placeholderMap.get(CommonConstants.NOTIFICATION_SPECIFIC_PHONE_NUMBERS_PLACEHOLDER) :"+placeholderMap.get(CommonConstants.NOTIFICATION_SPECIFIC_PHONE_NUMBERS_PLACEHOLDER));
+		logger.info("eventOpt.isPresent()  :"+eventOpt.isPresent() );
+		logger.info("eventOpt.get().getIsSpecific() :"+eventOpt.get().getIsSpecific());
 		if( placeholderMap.get(CommonConstants.NOTIFICATION_SPECIFIC_PHONE_NUMBERS_PLACEHOLDER) != null &&
 				eventOpt.isPresent() && eventOpt.get().getIsSpecific() == true) {
 			logger.info("****************************** Inside of if(eventOpt.isPresent()) **********************");
