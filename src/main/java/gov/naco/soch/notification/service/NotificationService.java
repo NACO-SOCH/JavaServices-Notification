@@ -144,6 +144,7 @@ public class NotificationService {
 		} else {
 			if (event.getMasterNotificationEventType() != null) {
 				senderMail = event.getMasterNotificationEventType().getSenderEmail();
+				logger.info("############## SENDER MAIL ID  :"+senderMail);
 			}
 			List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);
 			List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
@@ -301,6 +302,21 @@ public class NotificationService {
 
 		NotificationEvent event = null;
 		Optional<NotificationEvent> eventOpt = notificationEventRepository.findByEventIdAndIsEnabled(eventId, true);
+		//For specific users
+		logger.info("placeholderMap.get(CommonConstants.NOTIFICATION_SPECIFIC_PHONE_NUMBERS_PLACEHOLDER) :"+placeholderMap.get(CommonConstants.NOTIFICATION_SPECIFIC_PHONE_NUMBERS_PLACEHOLDER));
+		logger.info("eventOpt.isPresent()  :"+eventOpt.isPresent() );
+		logger.info("eventOpt.get().getIsSpecific() :"+eventOpt.get().getIsSpecific());
+		if( placeholderMap.get(CommonConstants.NOTIFICATION_SPECIFIC_PHONE_NUMBERS_PLACEHOLDER) != null &&
+				eventOpt.isPresent() && eventOpt.get().getIsSpecific() == true) {
+			logger.info("****************************** Inside of if(eventOpt.isPresent()) **********************");
+			System.out.println("Event place holders :"+eventOpt.get().getNotificationEventPlaceholders());
+			sendSMSToSpecificUsers(placeholderMap, eventOpt.get());
+			
+		}
+		//For role users
+		else {
+		logger.info("##################### Inside of ELSE : if( placeholderMap.get(CommonConstants.NOTIFICATION_SPECIFIC_PHONE_NUMBERS_PLACEHOLDER) != null &&\r\n" + 
+				"				eventOpt.isPresent() && eventOpt.get().getIsSpecific() == true) { ##########################");
 		if (eventOpt.isPresent() && placeholderMap.containsKey(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY)
 				&& placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY) != null) {
 
@@ -332,10 +348,9 @@ public class NotificationService {
 					if (!CollectionUtils.isEmpty(mobileNumbersList)) {
 
 						for (Map.Entry<String, String> entry : mobileNumbersList.entrySet()) {
-
+							
 							String finalSmsTemplate = replacePlaceHolders(event.getSmsTemplate(), placeholderMap,
-									entry.getValue(), placeholders);
-
+									entry.getKey(), placeholders);
 							try {
 								if (!StringUtils.isBlank(entry.getValue())) {
 									logger.info(
@@ -360,7 +375,25 @@ public class NotificationService {
 				smsService.sendSms(detail.getMobileNumber(), finalSmsTemplate);
 			});
 		}
+		}
 	}
+
+private void sendSMSToSpecificUsers(Map<String, Object> placeholderMap, NotificationEvent event) {
+	logger.info("Inside of sendSMSToSpecificUsers(Map<String, Object> placeholderMap, NotificationEvent event) ");
+	List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(event.getEventId());
+	List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
+			.collect(Collectors.toList());
+	String finalSmsTemplate = replacePlaceHolders(event.getSmsTemplate(), placeholderMap,
+			String.valueOf(placeholderMap.get(CommonConstants.NOTIFICATION_SPECIFIC_RECIPIENT_NAME_PLACEHOLDER)),
+			placeholders);
+	List<String> toPhoneNumbers = (List<String>) placeholderMap
+			.get(CommonConstants.NOTIFICATION_SPECIFIC_PHONE_NUMBERS_PLACEHOLDER);
+	for(String phoneNumber : toPhoneNumbers) {
+		logger.info("Going to call smsService.sendSms : phone number :"+phoneNumber+" Message :"+finalSmsTemplate);
+		smsService.sendSms(phoneNumber, finalSmsTemplate);
+		logger.info("After smsService.sendSms is called!");
+	}
+}
 
 //	public void sendWhatsapp(Map<String, Object> placeholderMap, Long eventId) {
 //		List<NotificationProjection> notificationDetails = notificationEventRepository.findAllUsersByRoles(eventId);

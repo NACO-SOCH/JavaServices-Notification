@@ -1,5 +1,6 @@
 package gov.naco.soch.notification.sender;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -48,6 +49,13 @@ public class SmsSenderService {
 
 	@Value("${notificationSmsApiSignature}")
 	private String smsApiSignature;
+	
+	@Value("${notificationSmsDltEntityId}")
+	private String smsDltEntityId;
+	
+	@Value("${notificationSmsDltTemplateId}")
+	private String notificationSmsdltTemplateId;
+	
 
 	private static final Logger logger = LoggerFactory.getLogger(SmsSenderService.class);
 
@@ -61,12 +69,16 @@ public class SmsSenderService {
 			if (mobileNumber.length() <= 10) {
 				mobileNumber = "91" + mobileNumber;
 			}
-			//String encodedMessageTemplate = URLEncoder.encode(smsTemplate, StandardCharsets.UTF_8.name());
-			String encodedMessageTemplate = "TextMessage";
+			String encodedMessageTemplate = URLEncoder.encode(smsTemplate, StandardCharsets.UTF_8.name());
+			encodedMessageTemplate = encodedMessageTemplate.replace("%2C", ",");
+			logger.info("********************* DECODED MESSAGE   ************** "+encodedMessageTemplate);
 			UriComponents builder = UriComponentsBuilder.fromHttpUrl(smsApiEndpoint)
 					.queryParam("username", smsApiUserName).queryParam("pin", smsApiPin)
 					.queryParam("message", encodedMessageTemplate).queryParam("mnumber", mobileNumber)
-					.queryParam("signature", smsApiSignature).build();
+					.queryParam("signature", smsApiSignature)
+					.queryParam("dlt_entity_id", smsDltEntityId)
+					.queryParam("dlt_template_id", notificationSmsdltTemplateId)
+					.build();
 			//HttpEntity<?> entity = new HttpEntity<>(headers);
 			// ---------------------
 			logger.info("Going to send SMS to mobileNumber-->{}:", mobileNumber);
