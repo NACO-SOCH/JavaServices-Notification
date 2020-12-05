@@ -1,12 +1,12 @@
 package gov.naco.soch.notification.controller;
 
-import java.util.List;
+
+
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import gov.naco.soch.dto.WebNotificationListDto;
 import gov.naco.soch.dto.WebUserNotificationDto;
 import gov.naco.soch.notification.service.WebUserNotificationService;
-import gov.naco.soch.projection.NotificationEventProjection;
+import gov.naco.soch.util.CommonConstants;
 /**
  * 
  * @author Rishad Basheer(u76718)
@@ -35,15 +35,20 @@ public class WebNotificationController {
 	@Autowired
 	private WebUserNotificationService webUserNotificationService;
 	
-	@PostMapping("/save")
-	public ResponseEntity<WebUserNotificationDto> saveWebNotification(@RequestBody WebUserNotificationDto webUserNotificationDto) {
-		
-		WebUserNotificationDto responseDto = webUserNotificationService.saveWebNotification(webUserNotificationDto);
-		if(responseDto.getId() != null) {
-			return new ResponseEntity<WebUserNotificationDto>(responseDto,HttpStatus.OK);
+	@PostMapping("/send/{eventId}")
+	//public void saveWebNotification(@RequestBody WebUserNotificationDto webUserNotificationDto) {
+		public void saveWebNotification(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
+	
+		WebUserNotificationDto webUserNotificationDto = new WebUserNotificationDto();
+		webUserNotificationDto.setFinalMessage(placeholderMap.get(CommonConstants.WEB_FINAL_MESSAGE).toString());
+		webUserNotificationDto.setFinalUrl(placeholderMap.get(CommonConstants.WEB_FINAL_URL).toString());
+		webUserNotificationDto.setIcon(placeholderMap.get(CommonConstants.WEB_ICON).toString());
+		webUserNotificationDto.setNotificationId(eventId);
+		webUserNotificationDto.setUserId(Long.parseLong(placeholderMap.get(CommonConstants.WEB_USER_ID).toString()));
+		webUserNotificationDto = webUserNotificationService.saveWebNotification(webUserNotificationDto);
+		if(webUserNotificationDto.getId() != null) {
+			logger.info("Web user notification is sent!  ID :"+webUserNotificationDto.getId());
 		}
-		responseDto = null;
-		return new ResponseEntity<WebUserNotificationDto>(responseDto,HttpStatus.INTERNAL_SERVER_ERROR);
 		
 	}
 	
