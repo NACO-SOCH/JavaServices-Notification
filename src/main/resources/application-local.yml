@@ -36,7 +36,7 @@ logging:
        root: info
        org: info
        gov: info
-accessKey: $5gw@965
+accessKey: devkey@3
 crossDomainAllowedOrigins:
 jwtSecret: U09DSCtUMHBTM2NyRXQrQXV0aG9yaXphdGlvbit0b2tlbitrZXk=
 notificationSmsApiEndpoint: https://smsgw.sms.gov.in/failsafe/HttpLink
