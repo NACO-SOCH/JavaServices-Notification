@@ -17,6 +17,7 @@ public class WebUserNotificationMapper {
 		logger.info("Inside of mapDtoToEntity!");
 		WebUserNotification webUserNotification = new WebUserNotification();
 		webUserNotification.setFinalMessage(webUserNotificationDto.getFinalMessage());
+		logger.info("Inside of mapDtoToEntity : Final Message : "+webUserNotificationDto.getFinalMessage());
 		webUserNotification.setFinalUrl(webUserNotificationDto.getFinalUrl());
 		webUserNotification.setIcon(webUserNotificationDto.getIcon());
 		webUserNotification.setNotificationEvent(mapToNotificationEvent(webUserNotificationDto.getNotificationId()));
