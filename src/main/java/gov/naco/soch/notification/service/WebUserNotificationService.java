@@ -97,6 +97,9 @@ public class WebUserNotificationService {
 			if(placeholderMap.get(CommonConstants.WEB_USER_ID)!=null) {
 				webUserNotificationDto.setUserId(Long.parseLong(placeholderMap.get(CommonConstants.WEB_USER_ID).toString()));
 				}
+			if(event.getIcon() != null) {
+				webUserNotificationDto.setIcon(event.getIcon());
+			}
 			WebUserNotification webUserNotification = WebUserNotificationMapper.mapDtoToEntity(webUserNotificationDto);
 			webUserNotification = webUserNotificationRepository.save(webUserNotification);
 			if(webUserNotification!=null) {
