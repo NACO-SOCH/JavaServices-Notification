@@ -53,6 +53,9 @@ public class NotificationMapper {
 		if(notificationEventSaveDto.getIsWebEnabled() != null) {
 			notificationEvent.setIsWebEnabled(notificationEventSaveDto.getIsWebEnabled());
 			}
+		if(notificationEventSaveDto.getIcon()!=null) {
+			notificationEvent.setIcon(notificationEventSaveDto.getIcon());
+		}
 		
 		notificationEvent.setIsEnabled(notificationEventSaveDto.getEnable());
 		if(notificationEventSaveDto.getActionUrl() != null) {
