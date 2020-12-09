@@ -39,14 +39,6 @@ public class WebNotificationController {
 	//public void saveWebNotification(@RequestBody WebUserNotificationDto webUserNotificationDto) {
 		public void saveWebNotification(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
 	
-/*		WebUserNotificationDto webUserNotificationDto = new WebUserNotificationDto();
-		webUserNotificationDto.setFinalMessage(placeholderMap.get(CommonConstants.WEB_FINAL_MESSAGE).toString());
-		webUserNotificationDto.setFinalUrl(placeholderMap.get(CommonConstants.WEB_FINAL_URL).toString());
-		webUserNotificationDto.setIcon(placeholderMap.get(CommonConstants.WEB_ICON).toString());
-		webUserNotificationDto.setNotificationId(eventId);
-		if(placeholderMap.get(CommonConstants.WEB_USER_ID)!=null) {
-		webUserNotificationDto.setUserId(Long.parseLong(placeholderMap.get(CommonConstants.WEB_USER_ID).toString()));
-		}*/
 		logger.info("EVENT ID :"+eventId);
 		boolean result = webUserNotificationService.saveWebNotification(placeholderMap,eventId);
 		if(result) {

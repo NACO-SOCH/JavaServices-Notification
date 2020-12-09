@@ -111,11 +111,12 @@ public class WebUserNotificationService {
 			List<NotificationEventRole> eventRoles = eventRoleRepository.findEventRolesByEventId(eventId);
 			for(NotificationEventRole role : eventRoles) {
 				try {
-				logger.info("Role Id from NotificationEventRole role : "+role.getEventRoleId());
+				logger.info("Role Id from NotificationEventRole role : "+role.getRole().getId());
 				logger.info("Event Id from NotificationEventRole role :"+role.getNotificationEvent().getEventId());
-				List<UserMaster> userMasters = userMasterRepository.findByRoleId(role.getEventRoleId());
+				List<UserMaster> userMasters = userMasterRepository.findByRoleId(role.getRole().getId());
 				if(userMasters!=null) {
 					logger.info("Inside of if(userMasters!=null) {");
+					logger.info("Size of user masters :"+userMasters.size());
 				for(UserMaster userMaster : userMasters) {
 					logger.info("Inside for(UserMaster userMaster : userMasters) ");
 					WebUserNotificationDto webUserNotificationDto = new WebUserNotificationDto();
