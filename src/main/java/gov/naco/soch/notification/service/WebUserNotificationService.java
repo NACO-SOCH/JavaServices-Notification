@@ -164,7 +164,7 @@ public class WebUserNotificationService {
 			pageSize = 5 ;
 		}
 		
-		Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("id").ascending());
+		Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("id").descending());
 		
 		WebNotificationListDto webNotificationListDto = new WebNotificationListDto();
 		List<WebNotificationProjection> webNotificationList = new ArrayList<>();
