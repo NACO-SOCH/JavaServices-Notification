@@ -16,6 +16,10 @@ public class SendSmsModel {
 	public void setMessageText(String messageText) {
 		this.messageText = messageText;
 	}
+	@Override
+	public String toString() {
+		return "SendSmsModel [mobileNumber=" + mobileNumber + ", messageText=" + messageText + "]";
+	}
 	
 	
 

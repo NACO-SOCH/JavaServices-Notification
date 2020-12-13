@@ -14,13 +14,12 @@ import gov.naco.soch.notification.service.MobileSmsSenderService;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SmsSenderController {
-	private static final Logger logger = LoggerFactory.getLogger(SmsSenderController.class);
+	private static final Logger log = LoggerFactory.getLogger(SmsSenderController.class);
 	@Autowired
 	MobileSmsSenderService mobileSmsSenderService;
-	@PostMapping("/mobile/sendsms")
-	public boolean sendSms(@RequestBody SendSmsModel sendSmsModel) {
-		logger.debug("Entered sendSms Method for mobile");
-		mobileSmsSenderService.sendSms(sendSmsModel);
-		return true;
+	@PostMapping("/mobile/general/send-otp")
+	public String sendOtp(@RequestBody SendSmsModel sendSmsModel) {
+		log.info("Entered SmsSenderController.sendOtp() method for mobile");
+		return mobileSmsSenderService.sendOtp(sendSmsModel);
 	}
 }
