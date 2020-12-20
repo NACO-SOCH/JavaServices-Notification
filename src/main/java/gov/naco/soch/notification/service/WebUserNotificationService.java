@@ -92,7 +92,6 @@ public class WebUserNotificationService {
 			if(event.getActionUrl()!=null) {
 			webUserNotificationDto.setFinalUrl(placeholderMap.get(event.getActionUrl()+CommonConstants.WEB_FINAL_URL).toString());
 			}
-			//webUserNotificationDto.setIcon(placeholderMap.get(CommonConstants.WEB_ICON).toString());
 			webUserNotificationDto.setNotificationId(eventId);
 			if(placeholderMap.get(CommonConstants.WEB_USER_ID)!=null) {
 				webUserNotificationDto.setUserId(Long.parseLong(placeholderMap.get(CommonConstants.WEB_USER_ID).toString()));
@@ -132,7 +131,6 @@ public class WebUserNotificationService {
 					if(event.getActionUrl()!=null) {
 					webUserNotificationDto.setFinalUrl(placeholderMap.get(event.getActionUrl()+CommonConstants.WEB_FINAL_URL).toString());
 					}
-					//webUserNotificationDto.setIcon(placeholderMap.get(CommonConstants.WEB_ICON).toString());
 					webUserNotificationDto.setNotificationId(eventId);
 					webUserNotificationDto.setUserId(userMaster.getId());
 					WebUserNotification webUserNotification = WebUserNotificationMapper.mapDtoToEntity(webUserNotificationDto);
