@@ -4,9 +4,12 @@ package gov.naco.soch.notification.controller;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,11 +33,12 @@ import gov.naco.soch.util.CommonConstants;
 @RequestMapping("/webnotification")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class WebNotificationController {
-
+   
 	private static final Logger logger = LoggerFactory.getLogger(WebNotificationController.class);
 	@Autowired
 	private WebUserNotificationService webUserNotificationService;
-	
+	@Autowired
+	private Environment env;
 	@PostMapping("/send/{eventId}")
 	//public void saveWebNotification(@RequestBody WebUserNotificationDto webUserNotificationDto) {
 		public void saveWebNotification(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
@@ -44,9 +48,24 @@ public class WebNotificationController {
 		if(result) {
 			logger.info("Web user notification is sent!  ");
 		}
-		
-		
-		
+
+	}
+	
+	@PostMapping("/job/send/{eventId}")
+	//public void saveWebNotification(@RequestBody WebUserNotificationDto webUserNotificationDto) {
+		public void saveWebJobNotification(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
+		logger.debug("Entered sendEmail Method");
+		String accessKey = placeholderMap.get("accessKey").toString();
+		if (StringUtils.isBlank(accessKey) || !env.getProperty(CommonConstants.PROPERTY_ACCESS_KEY).equals(accessKey)) {
+			throw new AccessDeniedException("accessKey is not valid");
+		} else {
+		logger.info("EVENT ID :"+eventId);
+		boolean result = webUserNotificationService.saveWebNotification(placeholderMap,eventId);
+		if(result) {
+			logger.info("Web user notification is sent!  ");
+		 }
+		}
+
 	}
 	
 	@GetMapping("/count")
