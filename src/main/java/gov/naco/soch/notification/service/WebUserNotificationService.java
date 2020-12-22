@@ -90,7 +90,9 @@ public class WebUserNotificationService {
 	        logger.info("Final Message (if) :"+finalWebTemplate);
 			webUserNotificationDto.setFinalMessage(finalWebTemplate);
 			if(event.getActionUrl()!=null) {
-			webUserNotificationDto.setFinalUrl(placeholderMap.get(event.getActionUrl()+CommonConstants.WEB_FINAL_URL).toString());
+				if(placeholderMap.get(event.getActionUrl()+CommonConstants.WEB_FINAL_URL)!=null) {
+					webUserNotificationDto.setFinalUrl(placeholderMap.get(event.getActionUrl()+CommonConstants.WEB_FINAL_URL).toString());
+				}
 			}
 			webUserNotificationDto.setNotificationId(eventId);
 			if(placeholderMap.get(CommonConstants.WEB_USER_ID)!=null) {
