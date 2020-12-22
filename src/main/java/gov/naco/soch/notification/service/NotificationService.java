@@ -137,7 +137,6 @@ public class NotificationService {
 		Optional<NotificationEvent> eventOpt = notificationEventRepository.findByEventIdAndIsEnabled(eventId, true);
 		if (eventOpt.isPresent()) {
 			event = eventOpt.get();
-		}
 		if (event.getIsSpecific() != null && event.getIsSpecific()) {
 			logger.debug("Inside of if (event.getIsSpecific() != null && event.getIsSpecific()) : NotificationService");
 			sendEmailToSpecificUsers(placeholderMap, event);
@@ -247,6 +246,7 @@ public class NotificationService {
 					}
 				});
 			}
+		 }
 		}
 	}
 
