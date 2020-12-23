@@ -75,7 +75,9 @@ public class WebUserNotificationService {
 	public boolean saveWebNotification(Map<String, Object> placeholderMap, Long eventId) {
 		logger.info("Inside of saveWebNotification : WebUserNotificationService ");
 		//Fetch Notification event
-		NotificationEvent event = eventRepository.findByEventIdAndIsEnabled(eventId, true).get();
+		Optional<NotificationEvent> eventOptional = eventRepository.findByEventIdAndIsEnabled(eventId, true);
+		if(eventOptional.isPresent()) {
+			NotificationEvent event = eventOptional.get();
 		if(event.getIsSpecific()) {
 			logger.info("Inside of if(event.getIsSpecific())");
 			WebUserNotificationDto webUserNotificationDto = new WebUserNotificationDto();
@@ -90,7 +92,9 @@ public class WebUserNotificationService {
 	        logger.info("Final Message (if) :"+finalWebTemplate);
 			webUserNotificationDto.setFinalMessage(finalWebTemplate);
 			if(event.getActionUrl()!=null) {
-			webUserNotificationDto.setFinalUrl(placeholderMap.get(event.getActionUrl()+CommonConstants.WEB_FINAL_URL).toString());
+				if(placeholderMap.get(CommonConstants.WEB_FINAL_URL)!=null) {
+					webUserNotificationDto.setFinalUrl(event.getActionUrl()+placeholderMap.get(CommonConstants.WEB_FINAL_URL).toString());
+				}
 			}
 			webUserNotificationDto.setNotificationId(eventId);
 			if(placeholderMap.get(CommonConstants.WEB_USER_ID)!=null) {
@@ -104,6 +108,7 @@ public class WebUserNotificationService {
 			if(webUserNotification!=null) {
 			webUserNotificationDto.setId(webUserNotification.getId());
 			}	
+			return true;
 		}
 		else {
 			logger.info("Inside of ELSE : if(event.getIsSpecific())");
@@ -129,7 +134,9 @@ public class WebUserNotificationService {
 					logger.info("Final Message  :"+finalWebTemplate);
 					webUserNotificationDto.setFinalMessage(finalWebTemplate);
 					if(event.getActionUrl()!=null) {
-					webUserNotificationDto.setFinalUrl(placeholderMap.get(event.getActionUrl()+CommonConstants.WEB_FINAL_URL).toString());
+						if(placeholderMap.get(CommonConstants.WEB_FINAL_URL)!=null) {
+							webUserNotificationDto.setFinalUrl(event.getActionUrl()+placeholderMap.get(CommonConstants.WEB_FINAL_URL).toString());
+						}
 					}
 					webUserNotificationDto.setNotificationId(eventId);
 					webUserNotificationDto.setUserId(userMaster.getId());
@@ -145,8 +152,12 @@ public class WebUserNotificationService {
 				logger.error("Error in role based users fetched!");
 			}
 			}
+			return true;
+		  }
 		}
-		return true;
+		else {
+			return false;
+		}
 	}
 	public Integer getWebNotificationCount(Integer userId) {
 		logger.info("Inside of getWebnotificationCountFuntion: WebUserNotificationService ");

@@ -36,7 +36,7 @@ logging:
        root: error
        org: error
        gov: error
-accessKey: $5gw@965
+accessKey: devkey@3
 crossDomainAllowedOrigins: http://localhost:4200,https://52.136.112.194,https://3.7.182.184,https://projectsoch.org,https://project-qasoch.org
 jwtSecret: U09DSCtUMHBTM2NyRXQrQXV0aG9yaXphdGlvbit0b2tlbitrZXk=
 notificationSmsApiEndpoint: https://dummyurl/dummyurl/dummyurl

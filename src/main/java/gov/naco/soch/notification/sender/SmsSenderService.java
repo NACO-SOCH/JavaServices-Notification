@@ -64,23 +64,19 @@ public class SmsSenderService {
 
 	public void sendSms(String mobileNumber, String smsTemplate) {
 		try {
-			//HttpHeaders headers = new HttpHeaders();
-			//headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 			if (mobileNumber.length() <= 10) {
 				mobileNumber = "91" + mobileNumber;
 			}
-			String encodedMessageTemplate = URLEncoder.encode(smsTemplate, StandardCharsets.UTF_8.name());
-			encodedMessageTemplate = encodedMessageTemplate.replace("%2C", ",");
-			logger.info("********************* DECODED MESSAGE   ************** "+encodedMessageTemplate);
+			//String encodedMessageTemplate = URLEncoder.encode(smsTemplate, StandardCharsets.UTF_8.name());
+			//encodedMessageTemplate = encodedMessageTemplate.replace("%2C", ",");
+			//logger.info("********************* DECODED MESSAGE   ************** "+encodedMessageTemplate);
 			UriComponents builder = UriComponentsBuilder.fromHttpUrl(smsApiEndpoint)
 					.queryParam("username", smsApiUserName).queryParam("pin", smsApiPin)
-					.queryParam("message", encodedMessageTemplate).queryParam("mnumber", mobileNumber)
+					.queryParam("message", smsTemplate).queryParam("mnumber", mobileNumber)
 					.queryParam("signature", smsApiSignature)
 					.queryParam("dlt_entity_id", smsDltEntityId)
 					.queryParam("dlt_template_id", notificationSmsdltTemplateId)
 					.build();
-			//HttpEntity<?> entity = new HttpEntity<>(headers);
-			// ---------------------
 			logger.info("Going to send SMS to mobileNumber-->{}:", mobileNumber);
 			logger.info("SMS API URL :" + builder.toUriString());
 			TrustStrategy acceptingTrustStrategy = (cert, authType) -> true;

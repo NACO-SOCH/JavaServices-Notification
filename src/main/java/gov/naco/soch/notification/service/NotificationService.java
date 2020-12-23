@@ -137,7 +137,6 @@ public class NotificationService {
 		Optional<NotificationEvent> eventOpt = notificationEventRepository.findByEventIdAndIsEnabled(eventId, true);
 		if (eventOpt.isPresent()) {
 			event = eventOpt.get();
-		}
 		if (event.getIsSpecific() != null && event.getIsSpecific()) {
 			logger.debug("Inside of if (event.getIsSpecific() != null && event.getIsSpecific()) : NotificationService");
 			sendEmailToSpecificUsers(placeholderMap, event);
@@ -247,6 +246,7 @@ public class NotificationService {
 					}
 				});
 			}
+		 }
 		}
 	}
 
@@ -309,7 +309,7 @@ public class NotificationService {
 		if( placeholderMap.get(CommonConstants.NOTIFICATION_SPECIFIC_PHONE_NUMBERS_PLACEHOLDER) != null &&
 				eventOpt.isPresent() && eventOpt.get().getIsSpecific() == true) {
 			logger.info("****************************** Inside of if(eventOpt.isPresent()) **********************");
-			System.out.println("Event place holders :"+eventOpt.get().getNotificationEventPlaceholders());
+			logger.debug("Event place holders :"+eventOpt.get().getNotificationEventPlaceholders());
 			sendSMSToSpecificUsers(placeholderMap, eventOpt.get());
 			
 		}
