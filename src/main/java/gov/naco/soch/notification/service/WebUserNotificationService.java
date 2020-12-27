@@ -82,6 +82,7 @@ public class WebUserNotificationService {
 		//Fetch Notification event
 		Optional<NotificationEvent> eventOptional = eventRepository.findByEventIdAndIsEnabled(eventId, true);
 		if(eventOptional.isPresent()) {
+			logger.info("Inside of if(eventOptional.isPresent()) %%%%%%%%%%%%%%%%%%%%");
 			NotificationEvent event = eventOptional.get();
 		if(event.getIsSpecific()) {
 			logger.info("Inside of if(event.getIsSpecific())");
@@ -221,6 +222,7 @@ public class WebUserNotificationService {
 		 }
 		}
 		else {
+			logger.info("Inside of FALSE   :  if(eventOptional.isPresent())");
 			return false;
 		}
 	}

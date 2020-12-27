@@ -66,6 +66,7 @@ public class WebNotificationController {
 		logger.debug("Entered into saveWebJobNotification Method");
 		if(placeholderMap.containsKey("accessKey")) {
 		String accessKey = placeholderMap.get("accessKey").toString();
+		logger.info("Acces Key :"+accessKey);
 		if (StringUtils.isBlank(accessKey) || !env.getProperty(CommonConstants.PROPERTY_ACCESS_KEY).equals(accessKey)) {
 			throw new AccessDeniedException("accessKey is not valid");
 		} else {
