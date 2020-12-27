@@ -23,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import gov.naco.soch.dto.WebUserNotificationDto;
+import gov.naco.soch.entity.Facility;
 import gov.naco.soch.entity.NotificationEvent;
 import gov.naco.soch.entity.NotificationEventRole;
 import gov.naco.soch.entity.UserMaster;
@@ -39,6 +40,7 @@ import gov.naco.soch.projection.NotificationProjection;
 import gov.naco.soch.projection.PlaceholderProjection;
 import gov.naco.soch.projection.UserListProjection;
 import gov.naco.soch.projection.WebNotificationProjection;
+import gov.naco.soch.repository.FacilityRepository;
 import gov.naco.soch.repository.NotificationEventPlaceholderRepository;
 import gov.naco.soch.repository.NotificationEventRepository;
 import gov.naco.soch.repository.NotificationEventRoleRepository;
@@ -66,6 +68,9 @@ public class WebUserNotificationService {
 	
 	@Autowired
 	private NotificationEventPlaceholderRepository notificationEventPlaceholderRepository;
+	
+	@Autowired
+	private FacilityRepository facilityRepository;
     
 	private static final String ANGLE_BRACKET_OPEN = "[";
 	private static final String ANGLE_BRACKET_CLOSED = "]";
@@ -112,6 +117,64 @@ public class WebUserNotificationService {
 		}
 		else {
 			logger.info("Inside of ELSE : if(event.getIsSpecific())");
+			//
+			if(placeholderMap.containsKey(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY) && placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY) !=null) {
+				logger.info("Inside of specific facility users condition!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			    Long facilityId = Long.parseLong(placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY).toString());
+				Optional<Facility> facilityOptional = facilityRepository.findById(facilityId);
+				if(facilityOptional.isPresent()) {
+					Facility facility = facilityOptional.get();
+					Long facilityTypeId = facility.getFacilityType().getId();
+					List<NotificationEventRole> eventRoles = eventRoleRepository
+							.findEventRolesByEventId(eventId);
+					if(eventRoles.isEmpty()||eventRoles==null) {
+						return false;
+					}
+					for(NotificationEventRole eventRole : eventRoles) {
+						Long facilityTypeIdEvent = eventRole.getRole().getFacilityType().getId();
+						if(facilityTypeId == facilityTypeIdEvent) {
+							List<UserMaster> users = getRoleBasedUsersOnFacility(facility.getId(),eventRole.getRole().getId(),facilityTypeId);
+							if(users!=null) {
+								logger.info("Users are fetched on roles !");
+								for(UserMaster userMaster : users) {
+									logger.info("Inside for(UserMaster userMaster : userMasters) ");
+									WebUserNotificationDto webUserNotificationDto = new WebUserNotificationDto();
+									List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
+									List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
+											.collect(Collectors.toList());
+									logger.info("Web Template :"+event.getWebTemplate());
+									String finalWebTemplate = replacePlaceHolders(event.getWebTemplate(), placeholderMap,
+											userMaster.getFirstname(),
+											placeholders);
+									logger.info("Final Message  :"+finalWebTemplate);
+									webUserNotificationDto.setFinalMessage(finalWebTemplate);
+									if(event.getActionUrl()!=null) {
+										if(placeholderMap.containsKey(CommonConstants.WEB_FINAL_URL) && placeholderMap.get(CommonConstants.WEB_FINAL_URL)!=null) {
+											webUserNotificationDto.setFinalUrl(event.getActionUrl()+placeholderMap.get(CommonConstants.WEB_FINAL_URL).toString());
+										}
+									}
+									webUserNotificationDto.setNotificationId(eventId);
+									webUserNotificationDto.setUserId(userMaster.getId());
+									WebUserNotification webUserNotification = WebUserNotificationMapper.mapDtoToEntity(webUserNotificationDto);
+									webUserNotification = webUserNotificationRepository.save(webUserNotification);
+									if(webUserNotification!=null) {
+										webUserNotificationDto.setId(webUserNotification.getId());
+										}
+								 }
+							}
+						}
+					}
+				}
+				else {
+					return false;
+				}
+			}
+			
+			else {
+
+			//
+				logger.info("Inside of (ELSE)   specific facility users condition!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			
 			List<NotificationEventRole> eventRoles = eventRoleRepository.findEventRolesByEventId(eventId);
 			for(NotificationEventRole role : eventRoles) {
 				try {
@@ -134,7 +197,7 @@ public class WebUserNotificationService {
 					logger.info("Final Message  :"+finalWebTemplate);
 					webUserNotificationDto.setFinalMessage(finalWebTemplate);
 					if(event.getActionUrl()!=null) {
-						if(placeholderMap.get(CommonConstants.WEB_FINAL_URL)!=null) {
+						if(placeholderMap.containsKey(CommonConstants.WEB_FINAL_URL) && placeholderMap.get(CommonConstants.WEB_FINAL_URL)!=null) {
 							webUserNotificationDto.setFinalUrl(event.getActionUrl()+placeholderMap.get(CommonConstants.WEB_FINAL_URL).toString());
 						}
 					}
@@ -153,10 +216,25 @@ public class WebUserNotificationService {
 			}
 			}
 			return true;
-		  }
+		   }
+			return false;
+		 }
 		}
 		else {
 			return false;
+		}
+	}
+	private List<UserMaster> getRoleBasedUsersOnFacility(Long facilityId, Long roleId, Long facilityTypeId) {
+		logger.info("Inside of  getRoleBasedUsersOnFacility(Long id, Long id2, Long facilityTypeId)");
+		logger.info("facilityId :"+facilityId+"     roleId :"+roleId+"   FacilityTypeId"+facilityTypeId );
+		List<UserMaster> users = userMasterRepository.findUsersByFacilityIdAndFacilityTypeIdAndRoleId(facilityId,
+				facilityTypeId, roleId);
+		if(!users.isEmpty()) {
+			return users;
+		}
+		else {
+			logger.debug("No users on these params");
+		return null;
 		}
 	}
 	public Integer getWebNotificationCount(Integer userId) {

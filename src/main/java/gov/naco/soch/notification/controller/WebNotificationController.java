@@ -43,6 +43,7 @@ public class WebNotificationController {
 	//public void saveWebNotification(@RequestBody WebUserNotificationDto webUserNotificationDto) {
 		public void saveWebNotification(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
 		logger.debug("Entered into saveWebJobNotification Method");
+		if(placeholderMap.containsKey("accessKey")) {
 		String accessKey = placeholderMap.get("accessKey").toString();
 		if (StringUtils.isBlank(accessKey) || !env.getProperty(CommonConstants.PROPERTY_ACCESS_KEY).equals(accessKey)) {
 			throw new AccessDeniedException("accessKey is not valid");
@@ -52,6 +53,10 @@ public class WebNotificationController {
 		if(result) {
 			logger.info("Web user notification is sent!  ");
 		 }
+		}
+		}
+		else {
+			logger.error("Access key doesn't exist!");
 		}
 	}
 	
@@ -59,6 +64,7 @@ public class WebNotificationController {
 	//public void saveWebNotification(@RequestBody WebUserNotificationDto webUserNotificationDto) {
 		public void saveWebJobNotification(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
 		logger.debug("Entered into saveWebJobNotification Method");
+		if(placeholderMap.containsKey("accessKey")) {
 		String accessKey = placeholderMap.get("accessKey").toString();
 		if (StringUtils.isBlank(accessKey) || !env.getProperty(CommonConstants.PROPERTY_ACCESS_KEY).equals(accessKey)) {
 			throw new AccessDeniedException("accessKey is not valid");
@@ -69,7 +75,10 @@ public class WebNotificationController {
 			logger.info("Web user notification is sent!  ");
 		 }
 		}
-
+		}
+		else {
+			logger.error("Access key doesn't exist!");
+		}
 	}
 	
 	@GetMapping("/count")
