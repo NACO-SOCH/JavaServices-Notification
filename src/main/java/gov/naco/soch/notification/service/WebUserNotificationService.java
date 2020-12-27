@@ -98,8 +98,11 @@ public class WebUserNotificationService {
 	        logger.info("Final Message (if) :"+finalWebTemplate);
 			webUserNotificationDto.setFinalMessage(finalWebTemplate);
 			if(event.getActionUrl()!=null) {
-				if(placeholderMap.get(CommonConstants.WEB_FINAL_URL)!=null) {
+				if(placeholderMap.containsKey(CommonConstants.WEB_FINAL_URL) && placeholderMap.get(CommonConstants.WEB_FINAL_URL)!=null){
 					webUserNotificationDto.setFinalUrl(event.getActionUrl()+placeholderMap.get(CommonConstants.WEB_FINAL_URL).toString());
+				}
+				else {
+					webUserNotificationDto.setFinalUrl(event.getActionUrl());
 				}
 			}
 			webUserNotificationDto.setNotificationId(eventId);
@@ -153,6 +156,9 @@ public class WebUserNotificationService {
 										if(placeholderMap.containsKey(CommonConstants.WEB_FINAL_URL) && placeholderMap.get(CommonConstants.WEB_FINAL_URL)!=null) {
 											webUserNotificationDto.setFinalUrl(event.getActionUrl()+placeholderMap.get(CommonConstants.WEB_FINAL_URL).toString());
 										}
+										else {
+											webUserNotificationDto.setFinalUrl(event.getActionUrl());
+										}
 									}
 									webUserNotificationDto.setNotificationId(eventId);
 									webUserNotificationDto.setUserId(userMaster.getId());
@@ -200,6 +206,9 @@ public class WebUserNotificationService {
 					if(event.getActionUrl()!=null) {
 						if(placeholderMap.containsKey(CommonConstants.WEB_FINAL_URL) && placeholderMap.get(CommonConstants.WEB_FINAL_URL)!=null) {
 							webUserNotificationDto.setFinalUrl(event.getActionUrl()+placeholderMap.get(CommonConstants.WEB_FINAL_URL).toString());
+						}
+						else {
+							webUserNotificationDto.setFinalUrl(event.getActionUrl());
 						}
 					}
 					webUserNotificationDto.setNotificationId(eventId);
