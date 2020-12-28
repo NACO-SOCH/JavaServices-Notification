@@ -257,7 +257,9 @@ public class WebUserNotificationService {
 	@SuppressWarnings("unchecked")
 	public WebNotificationListDto getAllWebNotification(Integer pageNumber, Integer pageSize,Integer userId) 
 	{
+		logger.info("Inside of getAllWebNotification : WebUserNotificationService!");
 		if (pageNumber == null || pageSize == null) {
+			logger.info("Inside of if (pageNumber == null || pageSize == null)");
 			pageNumber = 0;
 			pageSize = 5 ;
 		}
@@ -269,18 +271,22 @@ public class WebUserNotificationService {
 		Page<WebNotificationProjection> webNotificationListPage = null;
 		Optional<List> webNotificationListOptional = null;
 		int webNotificationCount = 0;
-		
+		logger.info("user Id :"+userId);
 		webNotificationCount = webUserNotificationRepository.findCountOfAllWebNotificationsByUser(userId);
 		webNotificationListPage = webUserNotificationRepository.findAllWebNotificationsByUserList(userId, pageable);
 		webNotificationListOptional = Optional.ofNullable(webNotificationListPage.getContent());
 			
 		
 		if (webNotificationListOptional.isPresent()) {
+			logger.info("if (webNotificationListOptional.isPresent()), Notifications are present!!!!!!!!!!!");
 			webNotificationList = webNotificationListOptional.get();
 		}
+		logger.info("Size of webNotificationList from DB :"+webNotificationList.size());
 		List<WebUserNotificationDto>  WebUserNotificationDtoList = NotificationMapper.mapWebNotificationListProjectionToWebUserNotificationDtoList(webNotificationList);
 		webNotificationListDto.setActualRecordCount(webNotificationCount);
 		webNotificationListDto.setWebNotificationList(WebUserNotificationDtoList);
+		logger.info("size of WebUserNotificationDtoList is "+WebUserNotificationDtoList.size());
+		logger.info("Just before returning the notifications list             :          getAllWebNotification!!!!!!!!!!!!!!!!! ");
 		return webNotificationListDto;
 		
 	}

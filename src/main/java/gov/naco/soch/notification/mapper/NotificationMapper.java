@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import gov.naco.soch.dto.MasterDto;
 import gov.naco.soch.dto.NotificationEventSaveDto;
 import gov.naco.soch.dto.UserMasterDto;
@@ -19,6 +22,8 @@ import gov.naco.soch.projection.WebNotificationProjection;
 
 public class NotificationMapper {
 
+	 private static final Logger logger = LoggerFactory.getLogger(NotificationMapper.class);
+	
 	public static NotificationEvent mapToNotificationEvent(NotificationEventSaveDto notificationEventSaveDto,
 			NotificationEvent notificationEvent) {
 		
@@ -87,8 +92,10 @@ public class NotificationMapper {
 	
 	
 	public static List<WebUserNotificationDto> mapWebNotificationListProjectionToWebUserNotificationDtoList(List<WebNotificationProjection> WebNotificationProjectionList) {
+		logger.info("Inside of mapWebNotificationListProjectionToWebUserNotificationDtoList######");
 		List<WebUserNotificationDto> list = new ArrayList<>();
 		for (WebNotificationProjection webNotification : WebNotificationProjectionList) {
+			logger.info("for (WebNotificationProjection webNotification : WebNotificationProjectionList)");
 			WebUserNotificationDto webUserNotificationDto = new WebUserNotificationDto();
 			webUserNotificationDto.setId(webNotification.getId());
 			webUserNotificationDto.setIcon(webNotification.getIcon());
