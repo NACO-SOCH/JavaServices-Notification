@@ -42,19 +42,8 @@ public class WebNotificationController {
 	@PostMapping("/send/{eventId}")
 	//public void saveWebNotification(@RequestBody WebUserNotificationDto webUserNotificationDto) {
 		public void saveWebNotification(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
-	
-		logger.info("EVENT ID :"+eventId);
-		boolean result = webUserNotificationService.saveWebNotification(placeholderMap,eventId);
-		if(result) {
-			logger.info("Web user notification is sent!  ");
-		}
-
-	}
-	
-	@PostMapping("/job/send/{eventId}")
-	//public void saveWebNotification(@RequestBody WebUserNotificationDto webUserNotificationDto) {
-		public void saveWebJobNotification(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
-		logger.debug("Entered sendEmail Method");
+		logger.debug("Entered into saveWebJobNotification Method");
+		if(placeholderMap.containsKey("accessKey")) {
 		String accessKey = placeholderMap.get("accessKey").toString();
 		if (StringUtils.isBlank(accessKey) || !env.getProperty(CommonConstants.PROPERTY_ACCESS_KEY).equals(accessKey)) {
 			throw new AccessDeniedException("accessKey is not valid");
@@ -65,7 +54,32 @@ public class WebNotificationController {
 			logger.info("Web user notification is sent!  ");
 		 }
 		}
-
+		}
+		else {
+			logger.error("Access key doesn't exist!");
+		}
+	}
+	
+	@PostMapping("/job/send/{eventId}")
+	//public void saveWebNotification(@RequestBody WebUserNotificationDto webUserNotificationDto) {
+		public void saveWebJobNotification(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
+		logger.debug("Entered into saveWebJobNotification Method");
+		if(placeholderMap.containsKey("accessKey")) {
+		String accessKey = placeholderMap.get("accessKey").toString();
+		logger.info("Acces Key :"+accessKey);
+		if (StringUtils.isBlank(accessKey) || !env.getProperty(CommonConstants.PROPERTY_ACCESS_KEY).equals(accessKey)) {
+			throw new AccessDeniedException("accessKey is not valid");
+		} else {
+		logger.info("EVENT ID :"+eventId);
+		boolean result = webUserNotificationService.saveWebNotification(placeholderMap,eventId);
+		if(result) {
+			logger.info("Web user notification is sent!  ");
+		 }
+		}
+		}
+		else {
+			logger.error("Access key doesn't exist!");
+		}
 	}
 	
 	@GetMapping("/count")
