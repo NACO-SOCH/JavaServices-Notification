@@ -125,8 +125,10 @@ public class WebUserNotificationService {
 			if(placeholderMap.containsKey(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY) && placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY) !=null) {
 				logger.info("Inside of specific facility users condition!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			    Long facilityId = Long.parseLong(placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY).toString());
+			    logger.info("Facility Id :"+facilityId);
 				Optional<Facility> facilityOptional = facilityRepository.findById(facilityId);
 				if(facilityOptional.isPresent()) {
+					logger.info("Inside of if(facilityOptional.isPresent())");
 					Facility facility = facilityOptional.get();
 					Long facilityTypeId = facility.getFacilityType().getId();
 					List<NotificationEventRole> eventRoles = eventRoleRepository
@@ -134,45 +136,42 @@ public class WebUserNotificationService {
 					if(eventRoles.isEmpty()||eventRoles==null) {
 						return false;
 					}
+					
 					for(NotificationEventRole eventRole : eventRoles) {
+						logger.info("Inside of for(NotificationEventRole eventRole : eventRoles) : Scpecific facility change!!!!!");
 						Long facilityTypeIdEvent = eventRole.getRole().getFacilityType().getId();
 						if(facilityTypeId == facilityTypeIdEvent) {
+							logger.info("Inside of if(facilityTypeId == facilityTypeIdEvent)");
 							List<UserMaster> users = getRoleBasedUsersOnFacility(facility.getId(),eventRole.getRole().getId(),facilityTypeId);
 							if(users!=null) {
 								logger.info("Users are fetched on roles !");
-								for(UserMaster userMaster : users) {
-									logger.info("Inside for(UserMaster userMaster : userMasters) ");
-									WebUserNotificationDto webUserNotificationDto = new WebUserNotificationDto();
-									List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
-									List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
-											.collect(Collectors.toList());
-									logger.info("Web Template :"+event.getWebTemplate());
-									String finalWebTemplate = replacePlaceHolders(event.getWebTemplate(), placeholderMap,
-											userMaster.getFirstname(),
-											placeholders);
-									logger.info("Final Message  :"+finalWebTemplate);
-									webUserNotificationDto.setFinalMessage(finalWebTemplate);
-									if(event.getActionUrl()!=null) {
-										if(placeholderMap.containsKey(CommonConstants.WEB_FINAL_URL) && placeholderMap.get(CommonConstants.WEB_FINAL_URL)!=null) {
-											webUserNotificationDto.setFinalUrl(event.getActionUrl()+placeholderMap.get(CommonConstants.WEB_FINAL_URL).toString());
-										}
-										else {
-											webUserNotificationDto.setFinalUrl(event.getActionUrl());
-										}
-									}
-									webUserNotificationDto.setNotificationId(eventId);
-									webUserNotificationDto.setUserId(userMaster.getId());
-									WebUserNotification webUserNotification = WebUserNotificationMapper.mapDtoToEntity(webUserNotificationDto);
-									webUserNotification = webUserNotificationRepository.save(webUserNotification);
-									if(webUserNotification!=null) {
-										webUserNotificationDto.setId(webUserNotification.getId());
-										}
-								 }
+								saveNotifications(users,event,placeholderMap,eventId);
 							}
+						}
+						else if (facilityTypeId != facilityTypeIdEvent && facilityTypeIdEvent == 2L) {
+							logger.info("Inside of else if (facilityTypeId != facilityTypeIdEvent && facilityTypeIdEvent == 2L)");
+							if (facility.getSacsId() != null) {
+								List<UserMaster> users = userMasterRepository
+										.findUsersByFacilityIdAndRole(facility.getSacsId(), eventRole.getRole().getId());
+			                  if(users != null) {
+			                	  logger.info("Users are fetched on roles <SACS> !");
+			                	  saveNotifications(users,event,placeholderMap,eventId);
+			                  }
+							}
+						}
+						else if(facilityTypeId != facilityTypeIdEvent && facilityTypeIdEvent == 1L) {
+							logger.info("Inside of else if(facilityTypeId != facilityTypeIdEvent && facilityTypeIdEvent == 1L)");
+							List<UserMaster> users = userMasterRepository.findUsersByFacilityTypeIdAndRoleId(facilityTypeIdEvent,
+									eventRole.getRole().getId());
+							if(users != null) {
+			                	  logger.info("Users are fetched on roles <NACO> !");
+			                	  saveNotifications(users,event,placeholderMap,eventId);
+			                  }
 						}
 					}
 				}
 				else {
+					logger.info("Else : if(facilityOptional.isPresent())");
 					return false;
 				}
 			}
@@ -191,34 +190,7 @@ public class WebUserNotificationService {
 				if(userMasters!=null) {
 					logger.info("Inside of if(userMasters!=null) {");
 					logger.info("Size of user masters :"+userMasters.size());
-				for(UserMaster userMaster : userMasters) {
-					logger.info("Inside for(UserMaster userMaster : userMasters) ");
-					WebUserNotificationDto webUserNotificationDto = new WebUserNotificationDto();
-					List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
-					List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
-							.collect(Collectors.toList());
-					logger.info("Web Template :"+event.getWebTemplate());
-					String finalWebTemplate = replacePlaceHolders(event.getWebTemplate(), placeholderMap,
-							userMaster.getFirstname(),
-							placeholders);
-					logger.info("Final Message  :"+finalWebTemplate);
-					webUserNotificationDto.setFinalMessage(finalWebTemplate);
-					if(event.getActionUrl()!=null) {
-						if(placeholderMap.containsKey(CommonConstants.WEB_FINAL_URL) && placeholderMap.get(CommonConstants.WEB_FINAL_URL)!=null) {
-							webUserNotificationDto.setFinalUrl(event.getActionUrl()+placeholderMap.get(CommonConstants.WEB_FINAL_URL).toString());
-						}
-						else {
-							webUserNotificationDto.setFinalUrl(event.getActionUrl());
-						}
-					}
-					webUserNotificationDto.setNotificationId(eventId);
-					webUserNotificationDto.setUserId(userMaster.getId());
-					WebUserNotification webUserNotification = WebUserNotificationMapper.mapDtoToEntity(webUserNotificationDto);
-					webUserNotification = webUserNotificationRepository.save(webUserNotification);
-					if(webUserNotification!=null) {
-						webUserNotificationDto.setId(webUserNotification.getId());
-						}
-				 }
+					saveNotifications(userMasters, event, placeholderMap, eventId);
 				}
 			}
 			catch (Exception e) {
@@ -234,6 +206,39 @@ public class WebUserNotificationService {
 			logger.info("Inside of FALSE   :  if(eventOptional.isPresent())");
 			return false;
 		}
+	}
+	private void saveNotifications(List<UserMaster> users, NotificationEvent event, Map<String, Object> placeholderMap,
+			Long eventId) {
+		logger.info("Inside of  saveNotifications ())()()()()()()()()()()))))))))))))))))))))))))))))))))))))))))))))()()()()");
+		for(UserMaster userMaster : users) {
+			logger.info("Inside for(UserMaster userMaster : userMasters) ");
+			WebUserNotificationDto webUserNotificationDto = new WebUserNotificationDto();
+			List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(eventId);
+			List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
+					.collect(Collectors.toList());
+			logger.info("Web Template :"+event.getWebTemplate());
+			String finalWebTemplate = replacePlaceHolders(event.getWebTemplate(), placeholderMap,
+					userMaster.getFirstname(),
+					placeholders);
+			logger.info("Final Message  :"+finalWebTemplate);
+			webUserNotificationDto.setFinalMessage(finalWebTemplate);
+			if(event.getActionUrl()!=null) {
+				if(placeholderMap.containsKey(CommonConstants.WEB_FINAL_URL) && placeholderMap.get(CommonConstants.WEB_FINAL_URL)!=null) {
+					webUserNotificationDto.setFinalUrl(event.getActionUrl()+placeholderMap.get(CommonConstants.WEB_FINAL_URL).toString());
+				}
+				else {
+					webUserNotificationDto.setFinalUrl(event.getActionUrl());
+				}
+			}
+			webUserNotificationDto.setNotificationId(eventId);
+			webUserNotificationDto.setUserId(userMaster.getId());
+			WebUserNotification webUserNotification = WebUserNotificationMapper.mapDtoToEntity(webUserNotificationDto);
+			webUserNotification = webUserNotificationRepository.save(webUserNotification);
+			if(webUserNotification!=null) {
+				webUserNotificationDto.setId(webUserNotification.getId());
+				}
+		 }
+		
 	}
 	private List<UserMaster> getRoleBasedUsersOnFacility(Long facilityId, Long roleId, Long facilityTypeId) {
 		logger.info("Inside of  getRoleBasedUsersOnFacility(Long id, Long id2, Long facilityTypeId)");
