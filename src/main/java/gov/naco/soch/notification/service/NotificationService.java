@@ -1,7 +1,5 @@
 package gov.naco.soch.notification.service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -581,12 +579,4 @@ public class NotificationService {
 		return null;
 	}
 
-	public static byte[] objectToByte(Object obj) throws Exception {
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(bos);
-		oos.writeObject(obj);
-		oos.flush();
-		byte[] data = bos.toByteArray();
-		return data;
-	}
 }
