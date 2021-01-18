@@ -22,6 +22,7 @@ import gov.naco.soch.dto.MiniMasterDto;
 import gov.naco.soch.dto.NotificationEventSaveDto;
 import gov.naco.soch.entity.Facility;
 import gov.naco.soch.entity.MasterNotificationEventType;
+import gov.naco.soch.entity.NotificationAttachment;
 import gov.naco.soch.entity.NotificationEvent;
 import gov.naco.soch.entity.NotificationEventRole;
 import gov.naco.soch.entity.UserMaster;
@@ -34,6 +35,7 @@ import gov.naco.soch.projection.NotificationProjection;
 import gov.naco.soch.projection.PlaceholderProjection;
 import gov.naco.soch.repository.FacilityRepository;
 import gov.naco.soch.repository.MasterNotificationEventTypeRepository;
+import gov.naco.soch.repository.NotificationAttachmentRepository;
 import gov.naco.soch.repository.NotificationEventPlaceholderRepository;
 import gov.naco.soch.repository.NotificationEventRepository;
 import gov.naco.soch.repository.NotificationEventRoleRepository;
@@ -62,6 +64,9 @@ public class NotificationService {
 
 	@Autowired
 	private NotificationEventRoleRepository notificationEventRoleRepository;
+
+	@Autowired
+	private NotificationAttachmentRepository notificationAttachmentRepository;
 
 	@Autowired
 	private SmsSenderService smsService;
@@ -227,16 +232,37 @@ public class NotificationService {
 
 									try {
 										if (!StringUtils.isBlank(entry.getValue())) {
+											if (placeholderMap.containsKey(CommonConstants.NOTIFICATION_ATTACHMENT)
+													&& placeholderMap
+															.get(CommonConstants.NOTIFICATION_ATTACHMENT) != null) {
 
-											logger.info(
-													"Going to call emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",
-													eventId, entry.getValue());
-											emailService.sendEmail(entry.getValue(), finalEmailSubject,
-													finalEmailTemplate, senderMail);
-											logger.info(
-													"Called emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",
-													eventId, entry.getValue());
-
+												@SuppressWarnings("unchecked")
+												List<Long> attachmentIds = (List<Long>) placeholderMap
+														.get(CommonConstants.NOTIFICATION_ATTACHMENT);
+												attachmentIds.toString().replace("[", "") // remove the right bracket
+														.replace("]", "") // remove the left bracket
+														.trim();
+												List<NotificationAttachment> notificationAttachments = notificationAttachmentRepository
+														.findAllById(attachmentIds);
+												logger.info(
+														"Going to call emailService.sendEmailWithAttachment with eventId-->{}: detail.getEmailId()-->{}:",
+														eventId, entry.getValue());
+												emailService.sendEmailWithAttachment(entry.getValue(),
+														finalEmailSubject, finalEmailTemplate, senderMail,
+														notificationAttachments);
+												logger.info(
+														"Called emailService.sendEmailWithAttachment with eventId-->{}: detail.getEmailId()-->{}:",
+														eventId, entry.getValue());
+											} else {
+												logger.info(
+														"Going to call emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",
+														eventId, entry.getValue());
+												emailService.sendEmail(entry.getValue(), finalEmailSubject,
+														finalEmailTemplate, senderMail);
+												logger.info(
+														"Called emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",
+														eventId, entry.getValue());
+											}
 										}
 									} catch (Exception e) {
 										logger.error("Exception in sendEmail->{}", e);
