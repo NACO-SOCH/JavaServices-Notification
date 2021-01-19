@@ -239,11 +239,9 @@ public class NotificationService {
 												@SuppressWarnings("unchecked")
 												List<Long> attachmentIds = (List<Long>) placeholderMap
 														.get(CommonConstants.NOTIFICATION_ATTACHMENT);
-												attachmentIds.toString().replace("[", "") // remove the right bracket
-														.replace("]", "") // remove the left bracket
-														.trim();
+
 												List<NotificationAttachment> notificationAttachments = notificationAttachmentRepository
-														.findAllById(attachmentIds);
+														.findAllNotificationsById(attachmentIds);
 												logger.info(
 														"Going to call emailService.sendEmailWithAttachment with eventId-->{}: detail.getEmailId()-->{}:",
 														eventId, entry.getValue());
