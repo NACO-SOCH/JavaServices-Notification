@@ -26,7 +26,8 @@ public class EmailSenderService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EmailSenderService.class);
 
-	public void sendEmail(String to, String subject, String text, String senderMail) {
+	public void sendEmail(String to, String subject, String text, String senderMail,
+			List<NotificationAttachment> notificationAttachments) {
 		/**
 		 * New code added for accepting HTML templates
 		 * 
@@ -40,27 +41,7 @@ public class EmailSenderService {
 			helper.setText(text, true); // Use this or above line.
 			helper.setTo(to);
 			helper.setSubject(subject);
-			logger.info("Inside of sendMail (before send mail) : EmailSenderService !");
-			emailSender.send(mimeMessage);
-			logger.info("Inside of sendMail (After sent mail) : EmailSenderService !");
-		} catch (Exception e) {
-			logger.error("Exception in sendEmail->", e);
-		}
-
-	}
-
-	public void sendEmailWithAttachment(String to, String subject, String text, String senderMail,
-			List<NotificationAttachment> notificationAttachments) {
-
-		try {
-			logger.debug("Inside of sendEmailWithAttachment : EmailSenderService !");
-			MimeMessage mimeMessage = emailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, CharEncoding.UTF_8);
-			helper.setFrom(senderMail, senderMail);
-			helper.setText(text, true); // Use this or above line.
-			helper.setTo(to);
-			helper.setSubject(subject);
-			if (!CollectionUtils.isEmpty(notificationAttachments)) {
+			if (notificationAttachments != null && !CollectionUtils.isEmpty(notificationAttachments)) {
 				notificationAttachments.forEach(notificationAttachment -> {
 					byte[] file = notificationAttachment.getAttachment();
 					String fileType = notificationAttachment.getAttachmentType();
@@ -74,12 +55,13 @@ public class EmailSenderService {
 					}
 				});
 			}
-			logger.info("Inside of sendEmailWithAttachment (before send mail) : EmailSenderService !");
+			logger.info("Inside of sendMail (before send mail) : EmailSenderService !");
 			emailSender.send(mimeMessage);
-			logger.info("Inside of sendEmailWithAttachment (After sent mail) : EmailSenderService !");
+			logger.info("Inside of sendMail (After sent mail) : EmailSenderService !");
 		} catch (Exception e) {
-			logger.error("Exception in sendEmailWithAttachment->", e);
+			logger.error("Exception in sendEmail->", e);
 		}
 
 	}
+
 }
