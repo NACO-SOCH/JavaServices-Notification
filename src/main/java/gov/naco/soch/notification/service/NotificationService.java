@@ -224,42 +224,36 @@ public class NotificationService {
 											placeholderMap, entry.getKey(), placeholders);
 									String finalEmailSubject = replacePlaceHolders(event.getEmailSubject(),
 											placeholderMap, entry.getKey(), placeholders);
+									List<NotificationAttachment> notificationAttachments = null;
 									if (placeholderMap.containsKey(CommonConstants.NOTIFICATION_EMAIL_CONTENT)
 											&& placeholderMap.get(CommonConstants.NOTIFICATION_EMAIL_CONTENT) != null) {
 										finalEmailTemplate = placeholderMap
 												.get(CommonConstants.NOTIFICATION_EMAIL_CONTENT).toString();
 									}
 
+									if (placeholderMap.containsKey(CommonConstants.NOTIFICATION_ATTACHMENT)
+											&& placeholderMap.get(CommonConstants.NOTIFICATION_ATTACHMENT) != null) {
+
+										@SuppressWarnings("unchecked")
+										List<Long> attachmentIds = (List<Long>) placeholderMap
+												.get(CommonConstants.NOTIFICATION_ATTACHMENT);
+										notificationAttachments = notificationAttachmentRepository
+												.findAllNotificationsById(attachmentIds);
+									}
+
 									try {
 										if (!StringUtils.isBlank(entry.getValue())) {
-											if (placeholderMap.containsKey(CommonConstants.NOTIFICATION_ATTACHMENT)
-													&& placeholderMap
-															.get(CommonConstants.NOTIFICATION_ATTACHMENT) != null) {
-
-												@SuppressWarnings("unchecked")
-												List<Long> attachmentIds = (List<Long>) placeholderMap
-														.get(CommonConstants.NOTIFICATION_ATTACHMENT);
-
-												List<NotificationAttachment> notificationAttachments = notificationAttachmentRepository
-														.findAllNotificationsById(attachmentIds);
-												logger.info(
-														"Going to call emailService.sendEmailWithAttachment with eventId-->{}: detail.getEmailId()-->{}:",
-														eventId, entry.getValue());
-												emailService.sendEmailWithAttachment(entry.getValue(),
-														finalEmailSubject, finalEmailTemplate, senderMail,
-														notificationAttachments);
-												logger.info(
-														"Called emailService.sendEmailWithAttachment with eventId-->{}: detail.getEmailId()-->{}:",
-														eventId, entry.getValue());
-											} else {
-												logger.info(
-														"Going to call emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",
-														eventId, entry.getValue());
-												emailService.sendEmail(entry.getValue(), finalEmailSubject,
-														finalEmailTemplate, senderMail);
-												logger.info(
-														"Called emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",
-														eventId, entry.getValue());
+											logger.info(
+													"Going to call emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",
+													eventId, entry.getValue());
+											emailService.sendEmail(entry.getValue(), finalEmailSubject,
+													finalEmailTemplate, senderMail, notificationAttachments);
+											logger.info(
+													"Called emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",
+													eventId, entry.getValue());
+											if (notificationAttachments != null
+													&& !CollectionUtils.isEmpty(notificationAttachments)) {
+												notificationAttachmentRepository.deleteAll(notificationAttachments);
 											}
 										}
 									} catch (Exception e) {
@@ -281,7 +275,7 @@ public class NotificationService {
 										"Going to call emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",
 										eventId, detail.getEmailId());
 								emailService.sendEmail(detail.getEmailId(), finalEmailSubject, finalEmailTemplate,
-										senderMail);
+										senderMail, null);
 								logger.info(
 										"Called emailService.sendEmail with eventId-->{}: detail.getEmailId()-->{}:",
 										eventId, detail.getEmailId());
@@ -315,7 +309,7 @@ public class NotificationService {
 		toEmailList.forEach(emailId -> {
 			logger.info("Going to call SPECIFIC emailService.sendEmail with eventId-->{}: emailId-->{}:",
 					event.getEventId(), emailId);
-			emailService.sendEmail(emailId, finalEmailSubject, finalEmailTemplate, senderMail);
+			emailService.sendEmail(emailId, finalEmailSubject, finalEmailTemplate, senderMail, null);
 			logger.info("Called SPECIFIC emailService.sendEmail with eventId-->{}: emailId-->{}:", event.getEventId(),
 					emailId);
 		});
