@@ -34,9 +34,9 @@ public class SendPushNotificationToBenificiaryService {
 		PushDevice pushDevice =new PushDevice();
 		String messsage="Reminder for your "+(String)map.get("regimen_name");
 		String eventName="Pill Reminder";
-		String eventId=""+(String)map.get("reminder_id");
+		String eventId=""+(Integer)map.get("reminder_id");
 		String screenName="Pill Reminder";
-		String deviceType=(String)map.get("device_type");
+		String deviceType=(String)map.get("device_os_type");
 		String content=(String)map.get("regimen_source");
 		IntentData intentData=new IntentData();
         intentData.setEventID(eventId);
