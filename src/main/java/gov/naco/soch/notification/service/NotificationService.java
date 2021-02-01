@@ -597,4 +597,15 @@ public class NotificationService {
 		return null;
 	}
 
+	public boolean cleanNotificationAttachemnts() {
+		try {
+			notificationAttachmentRepository.deleteAllCreatedBefore7Days();
+			logger.warn("cleanNotificationAttachemnts job ended");
+			return true;
+		} catch (Exception e) {
+			logger.debug("Exception :", e.getMessage());
+			return false;
+		}
+	}
+
 }
