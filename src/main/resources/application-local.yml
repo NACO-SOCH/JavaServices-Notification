@@ -46,3 +46,7 @@ notificationSmsApiSignature: SENDERID
 notificationSmsDltEntityId: dlt_entity_id
 notificationSmsDltTemplateId: tmplte_entity_Id
 delete.cron: 0 0 0 * * ?
+
+mobileTwilioSid: AC09e1c6030c3ea576c50ddefd86334d60
+mobileTwilioAuthId: 2964f7185c95aa269247c00ab3fe1caf
+mobileTwilioFromMobileNumber: +12058557289
