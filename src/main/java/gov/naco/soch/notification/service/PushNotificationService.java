@@ -3,6 +3,7 @@ package gov.naco.soch.notification.service;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.util.CollectionUtils;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -20,12 +22,15 @@ import com.google.firebase.messaging.AndroidNotification;
 import com.google.firebase.messaging.ApnsConfig;
 import com.google.firebase.messaging.Aps;
 import com.google.firebase.messaging.ApsAlert;
+import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Message.Builder;
+import com.google.firebase.messaging.MulticastMessage;
 
 import gov.naco.soch.notification.model.PushDevice;
 import gov.naco.soch.notification.model.PushNotification;
+import gov.naco.soch.notification.util.NotificationUtils;
 
 
 public class PushNotificationService {
@@ -128,6 +133,17 @@ public class PushNotificationService {
 				pushNotificationToFCM(pushNotification, null, topic, silent,null);
 				
 			}
+		}
+		public void sendPushNotificationToMultipleUserWithSameMessageAndTitle(PushNotification pushNotification ,List<String> tokens) {
+			List<List<String>> getPushNotificationTokens=NotificationUtils.getBatches(tokens, 500);
+			getPushNotificationTokens.forEach(data->{
+				try {
+					this.pushNotificationToMultipleFCMWithSameMessageAndTitle(pushNotification,data);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
+			
 		}
 
 		public void pushNotificationToFCM(PushNotification pushNotification, String registrationToken, String topic, boolean silent,String deviceType) throws Exception {
@@ -266,6 +282,103 @@ public class PushNotificationService {
 			log.info("Exist pushNotificationToFCM(-) of PushNotificationService");
 			
 		}
+		
+		public void pushNotificationToMultipleFCMWithSameMessageAndTitle(PushNotification pushNotification,List<String> tokens) throws Exception {
+			try {
+				log.info("Enter into pushNotificationToFCM(-) of PushNotificationService");
+				log.info("firebaseApp-->"+firebaseApp);
+				pushNotification.getData().put("title", pushNotification.getTitle());
+				pushNotification.getData().put("body", pushNotification.getMessage());
+				MulticastMessage message = MulticastMessage.builder()
+			    		.setAndroidConfig(AndroidConfig.builder()
+						        .setTtl(60 * 60 * 1000L) // 1 hour in milliseconds
+						        .setPriority(AndroidConfig.Priority.HIGH)
+						        .setNotification(AndroidNotification.builder()
+						            .setTitle(pushNotification.getTitle())
+						            .setBody(pushNotification.getMessage())
+						            .setSound("default")
+						            .setIcon("ic_launcher_foreground")
+						            .build())
+						        .putAllData(pushNotification.getData())
+						        .build())
+			    		 .setApnsConfig(ApnsConfig.builder()
+							        .putHeader("apns-priority", "10")
+							        .setAps(Aps.builder()
+							            .setAlert(ApsAlert.builder()
+							                .setTitle(pushNotification.getTitle())
+							                .setBody(pushNotification.getMessage())
+							                .build())
+							            .setSound("default")
+							            .setBadge(pushNotification.getBadgeCount() == null ? 0 : pushNotification.getBadgeCount())
+							            .build())
+							        .putAllCustomData(new HashMap<String, Object>(pushNotification.getData()))
+							        .build()).addAllTokens(tokens).build();
+					
+				log.info(" Push-Notification Third Party Api Invoked"); 
+				BatchResponse response = FirebaseMessaging.getInstance().sendMulticast(message);
+				// Response is a message ID string.
+				log.info("Successfully sent push message: " + response);
+				
+			} catch (Exception e) {
+				log.info("Successfully sent push message: " + e);
+				throw e;
+			}
+			
+			log.info("Exist pushNotificationToFCM(-) of PushNotificationService");
+			
+		}
+		
+		public void pushNotificationToMultipleFCMWithDiffMessageAndTitle(List<PushNotification> pushNotifications) throws Exception {
+			try {
+				log.info("Enter into pushNotificationToFCM(-) of PushNotificationService");
+				log.info("firebaseApp-->"+firebaseApp);
+				List<Message> messageBatch=new ArrayList<>();
+				pushNotifications.stream().forEach(pushNotification->{
+				pushNotification.getData().put("title", pushNotification.getTitle());
+				pushNotification.getData().put("body", pushNotification.getMessage());
+				Message message = Message.builder()
+					    .setAndroidConfig(AndroidConfig.builder()
+					        .setTtl(60 * 60 * 1000L) // 1 hour in milliseconds
+					        .setPriority(AndroidConfig.Priority.HIGH)
+					        .setNotification(AndroidNotification.builder()
+					            .setTitle(pushNotification.getTitle())
+					            .setBody(pushNotification.getMessage())
+					            .setSound("default")
+					            .setIcon("ic_launcher_foreground")
+					            .build())
+					        .putAllData(pushNotification.getData())
+					        .build())
+					     .setApnsConfig(ApnsConfig.builder()
+					        .putHeader("apns-priority", "10")
+					        .setAps(Aps.builder()
+					            .setAlert(ApsAlert.builder()
+					                .setTitle(pushNotification.getTitle())
+					                .setBody(pushNotification.getMessage())
+					                .build())
+					            .setSound("default")
+					            .setBadge(pushNotification.getBadgeCount() == null ? 0 : pushNotification.getBadgeCount())
+					            .build())
+					        .putAllCustomData(new HashMap<String, Object>(pushNotification.getData()))
+					        .build()).setToken(pushNotification.getDeviceId()).build();
+				messageBatch.add(message);
+				 
+				});
+					
+				log.info(" Push-Notification Third Party Api Invoked"); 
+				BatchResponse response = FirebaseMessaging.getInstance().sendAll(messageBatch);
+				// Response is a message ID string.
+				log.info("Successfully sent push message: " + response);
+				
+			} catch (Exception e) {
+				log.info("Successfully sent push message: " + e);
+				throw e;
+			}
+			
+			log.info("Exist pushNotificationToFCM(-) of PushNotificationService");
+			
+		}
+		
+		
 		
 		
 	}
