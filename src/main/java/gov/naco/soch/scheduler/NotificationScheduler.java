@@ -60,14 +60,158 @@ public class NotificationScheduler {
 	}
 	@Scheduled(cron = "0 * * * * *")
 	public void sendPushNotificationToTheBenificiaryPillRemiander() {
-		logger.warn("sendPushNotificationToTheBenificiaryPillRemiander");
+		logger.info("sendPushNotificationToTheBenificiaryPillRemiander");
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationToBenificiaryPillReminder();
 			}
 		});
-	   logger.warn("sendPushNotificationToTheBenificiaryPillRemiander");	
-		}
+	   logger.info("sendPushNotificationToTheBenificiaryPillRemiander");	
 	}
+	
+	@Scheduled(cron = "0 0 11 * * *")
+	public void sendPushNotificationForCD4Test() {
+		logger.info("sendPushNotificationForCD4Test");
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				sendPushNotification.sendPushNotificationForCD4Test();
+			}
+		});
+	   logger.info("sendPushNotificationForCD4Test");	
+	}
+	
+	@Scheduled(cron = "0 0 12 * * *")
+	public void sendPushNotificationForVLTest() {
+		logger.info("sendPushNotificationForVLTest");
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				sendPushNotification.sendPushNotificationForVLTest();
+			}
+		});
+	   logger.info("sendPushNotificationForVLTest");	
+	}
+	
+	@Scheduled(cron = "0 0 11 * * *")
+	public void sendPushNotificationForHIVReport() {
+		logger.info("sendPushNotificationForHIVReport");
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				sendPushNotification.sendPushNotificationForHIVReport();
+			}
+		});
+	   logger.info("sendPushNotificationForHIVReport");	
+	}
+	
+	@Scheduled(cron = "0 0 11 * * *")
+	public void sendPushNotificationForVLAboveThousand() {
+		logger.info("sendPushNotificationForVLAboveThousand");
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				sendPushNotification.sendPushNotificationForVLAboveThousand();
+			}
+		});
+	   logger.info("sendPushNotificationForVLAboveThousand");	
+	}
+	
+	@Scheduled(cron = "0 0 11 * * *")
+	public void sendPushNotificationForCD4LT350() {
+		logger.info("sendPushNotificationForCD4LT350");
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				sendPushNotification.sendPushNotificationForCD4LT350();
+			}
+		});
+	   logger.info("sendPushNotificationForCD4LT350");	
+	}
+	
+	@Scheduled(cron = "0 0 11 * * *")
+	public void sendPushNotificationForMonthlyAdhrenceLT80() {
+		logger.info("sendPushNotificationForCD4LT350");
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				sendPushNotification.sendPushNotificationForMonthlyAdhrenceLT80();
+			}
+		});
+	   logger.info("sendPushNotificationForMonthlyAdhrenceLT80");	
+	}
+	
+	@Scheduled(cron = "0 0 12 * * *")
+	public void sendPushNotificationForOIReporting() {
+		logger.info("sendPushNotificationForOIReporting");
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				sendPushNotification.sendPushNotificationForOIReporting();
+			}
+		});
+	   logger.info("sendPushNotificationForOIReporting");	
+	}
+	
+	@Scheduled(cron = "0 0 12 * * *")
+	public void sendPushNotificationForArtDispensation() {
+		logger.info("sendPushNotificationForArtDispensation");
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				sendPushNotification.sendPushNotificationForArtDispensation();
+			}
+		});
+	   logger.info("sendPushNotificationForArtDispensation");	
+	}
+	
+	@Scheduled(cron = "0 0 12 * * *")
+	public void sendPushNotificationForCommDistAtTI() {
+		logger.info("sendPushNotificationForCommDistAtTI");
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				sendPushNotification.sendPushNotificationForCommDistAtTI();
+			}
+		});
+	   logger.info("sendPushNotificationForCommDistAtTI");	
+	}
+	
+	@Scheduled(cron = "0 0 12 * * *")
+	public void sendPushNotificationForOstDispensation() {
+		logger.info("sendPushNotificationForOstDispensation");
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				sendPushNotification.sendPushNotificationForOstDispensation();
+			}
+		});
+	   logger.info("sendPushNotificationForOstDispensation");	
+	}
+	
+	@Scheduled(cron = "0 0 10 * * *")
+	public void sendPushNotificationForSyphillisTestResult() {
+		logger.info("sendPushNotificationForSyphillisTestResult");
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				sendPushNotification.sendPushNotificationForSyphillisTestResult();
+			}
+		});
+	   logger.info("sendPushNotificationForSyphillisTestResult");	
+	}
+	
+	@Scheduled(cron = "0 0 10 * * *")
+	public void sendPushNotificationForStiRtiDiagnosis() {
+		logger.info("sendPushNotificationForStiRtiDiagnosis");
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				sendPushNotification.sendPushNotificationForStiRtiDiagnosis();
+			}
+		});
+	   logger.info("sendPushNotificationForStiRtiDiagnosis");	
+	}
+}
 

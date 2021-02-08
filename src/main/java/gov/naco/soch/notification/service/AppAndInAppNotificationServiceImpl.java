@@ -29,7 +29,7 @@ public class AppAndInAppNotificationServiceImpl implements AppAndInAppNotiticati
 	
 	
 	
-	public void sendPushNotificationToBanificiary(List<Map<String,Object>> list) {
+	public void sendPushNotificationToBenificiary(List<Map<String,Object>> list) {
 		List<PushNotification> listPushNotifications=new ArrayList<>();
 		list.forEach(map->{
 			String deviceToken=(String)map.get("deviceToken");
@@ -41,6 +41,7 @@ public class AppAndInAppNotificationServiceImpl implements AppAndInAppNotiticati
 				IntentData intentData=new IntentData();
 		        intentData.setEventName(eventName);
 		        intentData.setMessage(messsage);
+		        intentData.setContent(""+ (Long)map.get("content"));
 		        Map<String,String> data=new HashMap<>();
 		        try {
 		        data.put("intentData", new ObjectMapper().writeValueAsString(intentData));

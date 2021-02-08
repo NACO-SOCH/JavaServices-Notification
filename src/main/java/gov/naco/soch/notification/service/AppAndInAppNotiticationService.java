@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface AppAndInAppNotiticationService {
 	
-	public void sendPushNotificationToBanificiary(List<Map<String,Object>> list) ;
+	public void sendPushNotificationToBenificiary(List<Map<String,Object>> list) ;
 	public void sendPushNotificationToMultipleUser(List<Map<String,Object>> list);
 	public void sendPushNotificationToSingleUser(Map<String,Object> map);
 	
