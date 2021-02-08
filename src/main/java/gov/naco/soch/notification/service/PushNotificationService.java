@@ -330,7 +330,7 @@ public class PushNotificationService {
 		
 		public void pushNotificationToMultipleFCMWithDiffMessageAndTitle(List<PushNotification> pushNotifications) throws Exception {
 			try {
-				log.info("Enter into pushNotificationToFCM(-) of PushNotificationService");
+				log.info("Enter       into pushNotificationToFCM(-) of PushNotificationService");
 				log.info("firebaseApp-->"+firebaseApp);
 				List<Message> messageBatch=new ArrayList<>();
 				pushNotifications.stream().forEach(pushNotification->{
