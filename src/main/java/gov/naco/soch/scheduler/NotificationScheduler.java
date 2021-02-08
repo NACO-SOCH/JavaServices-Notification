@@ -64,7 +64,7 @@ public class NotificationScheduler {
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
-				sendPushNotification.sendPushNotificationToBanificiary();
+				sendPushNotification.sendPushNotificationToBenificiaryPillReminder();
 			}
 		});
 	   logger.warn("sendPushNotificationToTheBenificiaryPillRemiander");	

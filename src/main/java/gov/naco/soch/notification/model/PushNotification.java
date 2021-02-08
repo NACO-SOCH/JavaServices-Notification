@@ -11,6 +11,7 @@ public class PushNotification {
 	private long id;
 	private long receiverId;
 	private String title;
+	private String deviceId;
 	private String message;
 	private int type;
 	private Map<String, String> data;
@@ -106,6 +107,16 @@ public class PushNotification {
 
 	public void setModifiedTime(String modifiedTime) {
 		this.modifiedTime = modifiedTime;
+	}
+	
+	
+
+	public String getDeviceId() {
+		return deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
 	}
 
 	@JsonIgnore
