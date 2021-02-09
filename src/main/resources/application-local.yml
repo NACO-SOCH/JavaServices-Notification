@@ -44,4 +44,3 @@ notificationSmsApiUsername: soch.ms
 notificationSmsApiPin: pinxxxxxxx
 notificationSmsApiSignature: SENDERID
 notificationSmsDltEntityId: dlt_entity_id
-notificationSmsDltTemplateId: tmplte_entity_Id
