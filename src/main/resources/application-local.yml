@@ -44,5 +44,4 @@ notificationSmsApiUsername: dummyuser
 notificationSmsApiPin: dummypin
 notificationSmsApiSignature: SENDERID
 notificationSmsDltEntityId: dlt_entity_id
-notificationSmsDltTemplateId: tmplte_entity_Id
 delete.cron: 0 0 0 * * ?
