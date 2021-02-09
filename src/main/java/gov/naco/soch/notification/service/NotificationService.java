@@ -306,6 +306,10 @@ public class NotificationService {
 		logger.info("placeholderMap.get(CommonConstants.NOTIFICATION_SPECIFIC_PHONE_NUMBERS_PLACEHOLDER) :"+placeholderMap.get(CommonConstants.NOTIFICATION_SPECIFIC_PHONE_NUMBERS_PLACEHOLDER));
 		logger.info("eventOpt.isPresent()  :"+eventOpt.isPresent() );
 		logger.info("eventOpt.get().getIsSpecific() :"+eventOpt.get().getIsSpecific());
+		String smsDltTemplateId = null;
+		if(eventOpt.get().getSmsDltTemplateId() != null ) {
+			smsDltTemplateId = eventOpt.get().getSmsDltTemplateId();
+		}
 		if( placeholderMap.get(CommonConstants.NOTIFICATION_SPECIFIC_PHONE_NUMBERS_PLACEHOLDER) != null &&
 				eventOpt.isPresent() && eventOpt.get().getIsSpecific() == true) {
 			logger.info("****************************** Inside of if(eventOpt.isPresent()) **********************");
@@ -356,7 +360,7 @@ public class NotificationService {
 									logger.info(
 											"Going to call smsService.sendSms with eventId-->{}: detail.getRecepient()-->{}:",
 											eventId, entry.getValue());
-									smsService.sendSms(entry.getValue(), finalSmsTemplate);
+									smsService.sendSms(entry.getValue(), finalSmsTemplate,smsDltTemplateId);
 									logger.info(
 											"Called smsService.sendSms with eventId-->{}: detail.getRecepient()-->{}:",
 											eventId, entry.getValue());
@@ -372,7 +376,7 @@ public class NotificationService {
 			smsEnabledNotificationDetails.forEach(detail -> {
 				String finalSmsTemplate = replacePlaceHolders(detail.getSmsTemplate(), placeholderMap,
 						detail.getRecepient(), placeholders);
-				smsService.sendSms(detail.getMobileNumber(), finalSmsTemplate);
+				smsService.sendSms(detail.getMobileNumber(), finalSmsTemplate,eventOpt.get().getSmsDltTemplateId());
 			});
 		}
 		}
@@ -388,9 +392,13 @@ private void sendSMSToSpecificUsers(Map<String, Object> placeholderMap, Notifica
 			placeholders);
 	List<String> toPhoneNumbers = (List<String>) placeholderMap
 			.get(CommonConstants.NOTIFICATION_SPECIFIC_PHONE_NUMBERS_PLACEHOLDER);
+	String smsDltTemplateId = null;
+	if(event.getSmsDltTemplateId() != null ) {
+		smsDltTemplateId = event.getSmsDltTemplateId();
+	}
 	for(String phoneNumber : toPhoneNumbers) {
 		logger.info("Going to call smsService.sendSms : phone number :"+phoneNumber+" Message :"+finalSmsTemplate);
-		smsService.sendSms(phoneNumber, finalSmsTemplate);
+		smsService.sendSms(phoneNumber, finalSmsTemplate,smsDltTemplateId);
 		logger.info("After smsService.sendSms is called!");
 	}
 }

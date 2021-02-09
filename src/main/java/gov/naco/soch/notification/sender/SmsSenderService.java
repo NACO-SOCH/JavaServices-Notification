@@ -53,16 +53,12 @@ public class SmsSenderService {
 	@Value("${notificationSmsDltEntityId}")
 	private String smsDltEntityId;
 	
-	@Value("${notificationSmsDltTemplateId}")
-	private String notificationSmsdltTemplateId;
-	
-
 	private static final Logger logger = LoggerFactory.getLogger(SmsSenderService.class);
 
 	@Autowired
 	private RestTemplate restTemplate;
 
-	public void sendSms(String mobileNumber, String smsTemplate) {
+	public void sendSms(String mobileNumber, String smsTemplate,String smsDltTemplateId) {
 		try {
 			if (mobileNumber.length() <= 10) {
 				mobileNumber = "91" + mobileNumber;
@@ -75,7 +71,7 @@ public class SmsSenderService {
 					.queryParam("message", smsTemplate).queryParam("mnumber", mobileNumber)
 					.queryParam("signature", smsApiSignature)
 					.queryParam("dlt_entity_id", smsDltEntityId)
-					.queryParam("dlt_template_id", notificationSmsdltTemplateId)
+					.queryParam("dlt_template_id", smsDltTemplateId)
 					.build();
 			logger.info("Going to send SMS to mobileNumber-->{}:", mobileNumber);
 			logger.info("SMS API URL :" + builder.toUriString());
