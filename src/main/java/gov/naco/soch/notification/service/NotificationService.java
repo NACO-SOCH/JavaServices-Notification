@@ -79,6 +79,8 @@ public class NotificationService {
 	private static final String ANGLE_BRACKET_OPEN = "[";
 	private static final String ANGLE_BRACKET_CLOSED = "]";
 	private static final String RECIPIENT_KEY = "recipient";
+    private	List<NotificationAttachment> notificationAttachments = null;
+
 
 	public List<NotificationEventProjection> getEventList() {
 		return notificationEventRepository.findAllProjectedByOrderByEventIdAsc();
@@ -294,6 +296,7 @@ public class NotificationService {
 				"Iniside of sendEmailToSpecificUsers(Map<String, Object> placeholderMap, NotificationEvent event) : NotificationService! ");
 		if (event.getMasterNotificationEventType() != null)
 			senderMail = event.getMasterNotificationEventType().getSenderEmail();
+
 		List<PlaceholderProjection> placeholdersProjection = getPlaceHoldersForTheEvent(event.getEventId());
 		List<String> placeholders = placeholdersProjection.stream().map(PlaceholderProjection::getPlaceholder)
 				.collect(Collectors.toList());
@@ -303,16 +306,31 @@ public class NotificationService {
 		String finalEmailSubject = replacePlaceHolders(event.getEmailSubject(), placeholderMap,
 				String.valueOf(placeholderMap.get(CommonConstants.NOTIFICATION_SPECIFIC_RECIPIENT_NAME_PLACEHOLDER)),
 				placeholders);
-		List<String> toEmailList = (List<String>) placeholderMap
-				.get(CommonConstants.NOTIFICATION_TO_SPECIFIC_EMAILS_PLACEHOLDER);
+		
+		@SuppressWarnings("unchecked")
+		List<String> toEmailList = (List<String>) placeholderMap.get(CommonConstants.NOTIFICATION_TO_SPECIFIC_EMAILS_PLACEHOLDER);
 		logger.info("Email Ids-->{}:", toEmailList);
+		
+		if (placeholderMap.containsKey(CommonConstants.NOTIFICATION_ATTACHMENT) && placeholderMap.get(CommonConstants.NOTIFICATION_ATTACHMENT) != null) {
+
+			@SuppressWarnings("unchecked")
+			List<Long> attachmentIds = (List<Long>) placeholderMap.get(CommonConstants.NOTIFICATION_ATTACHMENT);
+			notificationAttachments = notificationAttachmentRepository
+					.findAllNotificationsById(attachmentIds);
+		}
+		
 		toEmailList.forEach(emailId -> {
 			logger.info("Going to call SPECIFIC emailService.sendEmail with eventId-->{}: emailId-->{}:",
 					event.getEventId(), emailId);
-			emailService.sendEmail(emailId, finalEmailSubject, finalEmailTemplate, senderMail, null);
+			emailService.sendEmail(emailId, finalEmailSubject, finalEmailTemplate, senderMail, notificationAttachments);
 			logger.info("Called SPECIFIC emailService.sendEmail with eventId-->{}: emailId-->{}:", event.getEventId(),
 					emailId);
 		});
+		
+		if (notificationAttachments != null
+				&& !CollectionUtils.isEmpty(notificationAttachments)) {
+			notificationAttachmentRepository.deleteAll(notificationAttachments);
+		}
 
 	}
 
