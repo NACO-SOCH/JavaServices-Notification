@@ -41,7 +41,7 @@ public class AppAndInAppNotificationServiceImpl implements AppAndInAppNotiticati
 				IntentData intentData=new IntentData();
 		        intentData.setEventName(eventName);
 		        intentData.setMessage(messsage);
-		        intentData.setContent(""+ (Long)map.get("content"));
+		        intentData.setContent(""+ (Integer)map.get("content"));
 		        Map<String,String> data=new HashMap<>();
 		        try {
 		        data.put("intentData", new ObjectMapper().writeValueAsString(intentData));
