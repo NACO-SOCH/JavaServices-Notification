@@ -12,7 +12,7 @@ import gov.naco.soch.repository.PillReminderTimeRepository;
 public class SendPushNotificationToBenificiaryService {
 	
 	@Autowired
-	private AppAndInAppNotiticationService appAndInAppNotificationService;
+	private AppAndInAppNotificationService appAndInAppNotificationService;
 	@Autowired
 	private PillReminderTimeRepository pillReminderTimeRepository;
 	
