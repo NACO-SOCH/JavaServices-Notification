@@ -14,20 +14,21 @@ import org.springframework.util.CollectionUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import gov.naco.soch.entity.PushNotificationEntity;
 import gov.naco.soch.notification.model.IntentData;
 import gov.naco.soch.notification.model.NotificationSuccess;
 import gov.naco.soch.notification.model.PushDevice;
 import gov.naco.soch.notification.model.PushNotification;
+import gov.naco.soch.repository.PushNotificationRepository;
 import io.grpc.netty.shaded.io.netty.util.internal.StringUtil;
 @Service
-public class AppAndInAppNotificationServiceImpl implements AppAndInAppNotiticationService{
+public class AppAndInAppNotificationServiceImpl implements AppAndInAppNotificationService{
 	private static final Logger log = LoggerFactory.getLogger(AppAndInAppNotificationServiceImpl.class);
 	
 	@Autowired
 	private AsyncPushNotificationService webSync;
-	
-	
-	
+	@Autowired
+	private PushNotificationRepository pushNotificationRepository;
 	
 	public void sendPushNotificationToBenificiary(List<Map<String,Object>> list) {
 		List<PushNotification> listPushNotifications=new ArrayList<>();
@@ -62,9 +63,11 @@ public class AppAndInAppNotificationServiceImpl implements AppAndInAppNotiticati
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			
-			
-			
+			    PushNotificationEntity entity = new PushNotificationEntity();
+			    entity.setBeneficiaryId(Long.valueOf((Integer)map.get("beneficiary_id")));
+			    entity.setNotificationHeader((String)map.get("notificationTitle"));
+			    entity.setNotificationMessage((String)map.get("notificationMessage"));
+			    pushNotificationRepository.save(entity);
 		});
 		
 	}
@@ -89,11 +92,6 @@ public class AppAndInAppNotificationServiceImpl implements AppAndInAppNotiticati
         }
 		
 	}
-	
-	
-	
-	
-
 	
 	private void sendAndSaveNotification(IntentData intentData,PushDevice pushDevice, Boolean persisted) {
 		log.info("Entering AppAndInAppNotiticationService sendAndSaveNotification::{}::persisted::{}",pushDevice,intentData);
@@ -138,15 +136,19 @@ public class AppAndInAppNotificationServiceImpl implements AppAndInAppNotiticati
 		
 	}
 
+	@Override
+	public List<PushNotificationEntity> getNotificationsForBeneficiary(Long beneficiaryId) {
+		return pushNotificationRepository.getNotificationsForBeneficiary(beneficiaryId);
+	}
 
-	
+	@Override
+	public boolean deleteNotificationForBeneficiary(Long beneficiaryId, Long notificationId) {
+		int deleted = pushNotificationRepository.deleteNotificationForBeneficiary(beneficiaryId, notificationId);
+		if(deleted == 1) {
+			return true;
+		}
+		return false;
+	}
 
-	
-	
-	
-		
-	
-	
-	
 
 }
