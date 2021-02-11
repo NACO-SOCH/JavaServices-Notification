@@ -20,14 +20,20 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.client.RestTemplate;
+
+import gov.naco.soch.notification.service.PushNotificationService;
 
 @SpringBootApplication
 @EnableJpaRepositories("gov.naco.soch.repository")
 @EntityScan("gov.naco.soch.entity")
 @ComponentScan(basePackages = { "gov.naco.soch" })
+@EnableScheduling
 //@PropertySource("classpath:application-${spring.profiles.active}.yml")
 public class NotificationServiceApplication extends SpringBootServletInitializer {
 
@@ -75,5 +81,21 @@ public class NotificationServiceApplication extends SpringBootServletInitializer
 	 * 
 	 * }
 	 */
+	
+	@Bean
+	public PushNotificationService getPushNotificationService() throws Exception {
+
+		PushNotificationService pushNotificationService = new PushNotificationService("ust-project-38ce7-firebase-adminsdk-wb6nr-bc498ae207.json");
+		return pushNotificationService;
+	}
+	@Bean("NotificationExecutor")
+	public TaskExecutor createThreadPool() {
+	ThreadPoolTaskExecutor threadPoolTaskExecutor=new ThreadPoolTaskExecutor();
+	threadPoolTaskExecutor.setCorePoolSize(25);
+	threadPoolTaskExecutor.setMaxPoolSize(65);
+	threadPoolTaskExecutor.setThreadNamePrefix("Notification_Thread");
+	threadPoolTaskExecutor.initialize();
+	return threadPoolTaskExecutor;
+	}
 
 }
