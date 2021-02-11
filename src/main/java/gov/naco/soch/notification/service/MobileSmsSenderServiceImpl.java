@@ -14,11 +14,11 @@ import gov.naco.soch.notification.model.SendSmsModel;
 @Service
 public class MobileSmsSenderServiceImpl implements MobileSmsSenderService {
 	private static final Logger log = LoggerFactory.getLogger(MobileSmsSenderService.class);
-	@Value("${mobileTwilioSid}")
+	//@Value("${mobileTwilioSid}")
 	private String mobileSid;
-	@Value("${mobileTwilioAuthId}")
+	//@Value("${mobileTwilioAuthId}")
 	private String mobileauthId;
-	@Value("${mobileTwilioFromMobileNumber}")
+	//@Value("${mobileTwilioFromMobileNumber}")
 	private String mobileTwilioFromMobileNumber;
 	
 	@Override
