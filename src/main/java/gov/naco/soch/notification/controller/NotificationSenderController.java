@@ -50,7 +50,7 @@ public class NotificationSenderController {
 
 //API for sending system emails
 	@PostMapping("/sendsystememail/{eventId}")
-	public boolean sendSystemEmail(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
+	public void sendSystemEmail(@RequestBody Map<String, Object> placeholderMap, @PathVariable Long eventId) {
 		logger.debug("Entered sendSystemEmail Method");
 		String accessKey = placeholderMap.get("accessKey").toString();
 		if (StringUtils.isBlank(accessKey) || !env.getProperty(CommonConstants.PROPERTY_ACCESS_KEY).equals(accessKey)) {
@@ -58,7 +58,6 @@ public class NotificationSenderController {
 		} else {
 			notificationService.sendEmail(placeholderMap, eventId);
 		}
-		return true;
 	}
 	
 	@PostMapping("/sendsystemsms/{eventId}")
