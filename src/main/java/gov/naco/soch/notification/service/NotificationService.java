@@ -149,7 +149,7 @@ public class NotificationService {
 	// }
 
 	public void sendEmail(Map<String, Object> placeholderMap, Long eventId) {
-		logger.debug("Inside of sendEmail() : NotificationService");
+		logger.debug("Inside of sendEmail() : NotificationService with eventId->{}:",eventId);
 		NotificationEvent event = null;
 		Optional<NotificationEvent> eventOpt = notificationEventRepository.findByEventIdAndIsEnabled(eventId, true);
 		if (eventOpt.isPresent()) {
@@ -161,7 +161,7 @@ public class NotificationService {
 			} else {
 				if (event.getMasterNotificationEventType() != null) {
 					senderMail = event.getMasterNotificationEventType().getSenderEmail();
-					logger.info("############## SENDER MAIL ID  :" + senderMail);
+					logger.debug("############## SENDER MAIL ID  :" + senderMail);
 				}
 				List<NotificationProjection> notificationDetails = notificationEventRepository
 						.findAllUsersByRoles(eventId);
@@ -171,6 +171,9 @@ public class NotificationService {
 
 				if (placeholderMap.containsKey(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY)
 						&& placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY) != null) {
+					logger.info(
+							"Inside of sendEmail() : NotificationService with eventId->{}:placeholderMap.facility-->{}:",
+							eventId, placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY));
 
 					Long facilityId = ((Integer) placeholderMap.get(CommonConstants.NOTIFICATION_PLACEHOLDER_FACILITY))
 							.longValue();
