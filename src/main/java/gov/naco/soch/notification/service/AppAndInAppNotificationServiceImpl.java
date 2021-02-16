@@ -64,7 +64,7 @@ public class AppAndInAppNotificationServiceImpl implements AppAndInAppNotificati
 					e.printStackTrace();
 				}
 			    PushNotificationEntity entity = new PushNotificationEntity();
-			    entity.setBeneficiaryId(Long.valueOf((Integer)map.get("beneficiary_id")));
+			    entity.setBeneficiaryId(Long.valueOf((Integer)map.get("beneficiaryId")));
 			    entity.setNotificationHeader((String)map.get("notificationTitle"));
 			    entity.setNotificationMessage((String)map.get("notificationMessage"));
 			    pushNotificationRepository.save(entity);
@@ -131,6 +131,12 @@ public class AppAndInAppNotificationServiceImpl implements AppAndInAppNotificati
 	        catch(Exception e) {
 	        	e.printStackTrace();
 	        }
+	        //Add notifications sent to push_notifications table
+	        PushNotificationEntity entity = new PushNotificationEntity();
+		    entity.setBeneficiaryId(Long.valueOf((Integer)messageAndTitle.get("beneficiaryId")));
+		    entity.setNotificationHeader(title);
+		    entity.setNotificationMessage(message);
+		    pushNotificationRepository.save(entity);
 			
 		}
 		
