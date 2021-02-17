@@ -255,8 +255,16 @@ public class WebUserNotificationService {
 	}
 	public Integer getWebNotificationCount(Integer userId) {
 		logger.info("Inside of getWebnotificationCountFuntion: WebUserNotificationService ");
-		Integer notificationCount = webUserNotificationRepository.getWebNotificationCount(userId);
-		return notificationCount;
+		LoginResponseDto currentUser = UserUtils.getLoggedInUserDetails();
+		if(currentUser != null){
+			logger.info("User in login state: WebUserNotificationService ");
+			Integer notificationCount = webUserNotificationRepository.getWebNotificationCount(userId);
+			return notificationCount;
+		}else{
+			logger.info("User in logout state: WebUserNotificationService ");
+			return 0;
+		}
+		
 	}
 	
 	@SuppressWarnings("unchecked")
