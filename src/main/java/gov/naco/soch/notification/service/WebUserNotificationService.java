@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import gov.naco.soch.dto.WebUserNotificationDto;
@@ -29,6 +30,7 @@ import gov.naco.soch.entity.NotificationEventRole;
 import gov.naco.soch.entity.UserMaster;
 import gov.naco.soch.entity.WebUserNotification;
 import gov.naco.soch.enums.FacilityTypeEnum;
+import gov.naco.soch.exception.ServiceException;
 import gov.naco.soch.mapper.UserMapperUtil;
 import gov.naco.soch.dto.LoginResponseDto;
 import gov.naco.soch.dto.UserDto;
@@ -255,8 +257,19 @@ public class WebUserNotificationService {
 	}
 	public Integer getWebNotificationCount(Integer userId) {
 		logger.info("Inside of getWebnotificationCountFuntion: WebUserNotificationService ");
-		Integer notificationCount = webUserNotificationRepository.getWebNotificationCount(userId);
-		return notificationCount;
+		try{
+			LoginResponseDto currentUser = UserUtils.getLoggedInUserDetails();
+			if(currentUser != null){
+				logger.info("User found: WebUserNotificationService ");
+				Integer notificationCount = webUserNotificationRepository.getWebNotificationCount(userId);
+				return notificationCount;
+			}else{
+				logger.info("No User found: WebUserNotificationService ");
+				return 0;
+			}
+		}catch(Exception e){
+			   throw new ServiceException("No User Found", null, HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -59,32 +59,30 @@ public class NotificationScheduler {
 		}
 	}
 	@Scheduled(cron = "0 * * * * *")
-	public void sendPushNotificationToTheBenificiaryPillRemiander() {
-		logger.info("sendPushNotificationToTheBenificiaryPillRemiander");
+	public void sendPushNotificationToTheBenificiaryPillReminder() {
+		logger.info("START - sendPushNotificationToTheBenificiaryPillReminder");
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationToBenificiaryPillReminder();
 			}
 		});
-	   logger.info("sendPushNotificationToTheBenificiaryPillRemiander");	
 	}
 	
-	@Scheduled(cron = "0 0 11 * * *")
+	@Scheduled(cron = "0 0/15 * * * *")
 	public void sendPushNotificationForCD4Test() {
-		logger.info("sendPushNotificationForCD4Test");
+		logger.info("START - sendPushNotificationForCD4Test");
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForCD4Test();
 			}
 		});
-	   logger.info("sendPushNotificationForCD4Test");	
 	}
 	
-	@Scheduled(cron = "0 0 12 * * *")
+	@Scheduled(cron = "0 0/15 * * * *")
 	public void sendPushNotificationForVLTest() {
-		logger.info("sendPushNotificationForVLTest");
+		logger.info("START - sendPushNotificationForVLTest");
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -94,124 +92,114 @@ public class NotificationScheduler {
 	   logger.info("sendPushNotificationForVLTest");	
 	}
 	
-	@Scheduled(cron = "0 0 11 * * *")
+	@Scheduled(cron = "0 0/15 * * * *")
 	public void sendPushNotificationForHIVReport() {
-		logger.info("sendPushNotificationForHIVReport");
+		logger.info("START - sendPushNotificationForHIVReport");
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForHIVReport();
 			}
 		});
-	   logger.info("sendPushNotificationForHIVReport");	
 	}
 	
-	@Scheduled(cron = "0 0 11 * * *")
+	@Scheduled(cron = "0 0/15 * * * *")
 	public void sendPushNotificationForVLAboveThousand() {
-		logger.info("sendPushNotificationForVLAboveThousand");
+		logger.info("START - sendPushNotificationForVLAboveThousand");
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForVLAboveThousand();
 			}
 		});
-	   logger.info("sendPushNotificationForVLAboveThousand");	
 	}
 	
-	@Scheduled(cron = "0 0 11 * * *")
+	@Scheduled(cron = "0 0/15 * * * *")
 	public void sendPushNotificationForCD4LT350() {
-		logger.info("sendPushNotificationForCD4LT350");
+		logger.info("START - sendPushNotificationForCD4LT350");
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForCD4LT350();
 			}
 		});
-	   logger.info("sendPushNotificationForCD4LT350");	
 	}
 	
-	@Scheduled(cron = "0 0 11 * * *")
+	@Scheduled(cron = "0 0/15 * * * *")
 	public void sendPushNotificationForMonthlyAdhrenceLT80() {
-		logger.info("sendPushNotificationForCD4LT350");
+		logger.info("START - sendPushNotificationForCD4LT350");
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForMonthlyAdhrenceLT80();
 			}
 		});
-	   logger.info("sendPushNotificationForMonthlyAdhrenceLT80");	
 	}
 	
-	@Scheduled(cron = "0 0 12 * * *")
+	@Scheduled(cron = "0 0/15 * * * *")
 	public void sendPushNotificationForOIReporting() {
-		logger.info("sendPushNotificationForOIReporting");
+		logger.info("START - sendPushNotificationForOIReporting");
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForOIReporting();
 			}
 		});
-	   logger.info("sendPushNotificationForOIReporting");	
 	}
 	
-	@Scheduled(cron = "0 0 12 * * *")
+	@Scheduled(cron = "0 0/15 * * * *")
 	public void sendPushNotificationForArtDispensation() {
-		logger.info("sendPushNotificationForArtDispensation");
+		logger.info("START - sendPushNotificationForArtDispensation");
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForArtDispensation();
 			}
 		});
-	   logger.info("sendPushNotificationForArtDispensation");	
 	}
 	
-	@Scheduled(cron = "0 0 12 * * *")
+	@Scheduled(cron = "0 0/15 * * * *")
 	public void sendPushNotificationForCommDistAtTI() {
-		logger.info("sendPushNotificationForCommDistAtTI");
+		logger.info("START - sendPushNotificationForCommDistAtTI");
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForCommDistAtTI();
 			}
 		});
-	   logger.info("sendPushNotificationForCommDistAtTI");	
 	}
 	
-	@Scheduled(cron = "0 0 12 * * *")
+	@Scheduled(cron = "0 0/15 * * * *")
 	public void sendPushNotificationForOstDispensation() {
-		logger.info("sendPushNotificationForOstDispensation");
+		logger.info("START - sendPushNotificationForOstDispensation");
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForOstDispensation();
 			}
 		});
-	   logger.info("sendPushNotificationForOstDispensation");	
 	}
 	
-	@Scheduled(cron = "0 0 10 * * *")
+	@Scheduled(cron = "0 0/15 * * * *")
 	public void sendPushNotificationForSyphillisTestResult() {
-		logger.info("sendPushNotificationForSyphillisTestResult");
+		logger.info("START - sendPushNotificationForSyphillisTestResult");
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForSyphillisTestResult();
 			}
 		});
-	   logger.info("sendPushNotificationForSyphillisTestResult");	
 	}
 	
-	@Scheduled(cron = "0 0 10 * * *")
+	@Scheduled(cron = "0 0/15 * * * *")
 	public void sendPushNotificationForStiRtiDiagnosis() {
-		logger.info("sendPushNotificationForStiRtiDiagnosis");
+		logger.info("START - sendPushNotificationForStiRtiDiagnosis");
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForStiRtiDiagnosis();
 			}
 		});
-	   logger.info("sendPushNotificationForStiRtiDiagnosis");	
 	}
 }
 
