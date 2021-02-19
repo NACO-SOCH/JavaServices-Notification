@@ -1,5 +1,6 @@
 package gov.naco.soch.notification.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +43,8 @@ public class AppAndInAppNotificationServiceImpl implements AppAndInAppNotificati
 				IntentData intentData=new IntentData();
 		        intentData.setEventName(eventName);
 		        intentData.setMessage(messsage);
-		        intentData.setContent(""+ (Integer)map.get("content"));
+		        intentData.setContent(""+ (Timestamp)map.get("reminderTime"));
+		        intentData.setNotificationId(Long.valueOf((Integer)map.get("reminderId")));
 		        Map<String,String> data=new HashMap<>();
 		        try {
 		        data.put("intentData", new ObjectMapper().writeValueAsString(intentData));
@@ -114,7 +116,7 @@ public class AppAndInAppNotificationServiceImpl implements AppAndInAppNotificati
 
 	@Override
 	public void sendPushNotificationToMultipleUser(List<Map<String, Object>> list) {
-		if(CollectionUtils.isEmpty(list)) {
+		if(!CollectionUtils.isEmpty(list)) {
 			List<String> tokens=new ArrayList<>();
 			tokens=list.stream().filter(data->(Boolean)data.get("isNotification")).map(data->(String)data.get("deviceToken")).collect(Collectors.toList());
 			Map<String,Object> messageAndTitle=list.get(0);
