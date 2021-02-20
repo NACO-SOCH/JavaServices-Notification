@@ -69,7 +69,7 @@ public class NotificationScheduler {
 		});
 	}
 	
-	@Scheduled(cron = "0 0/15 * * * *")
+	@Scheduled(cron = "0 0/30 6 * * *")
 	public void sendPushNotificationForCD4Test() {
 		logger.info("START - sendPushNotificationForCD4Test");
 		taskExecutor.execute(new Runnable() {
@@ -80,7 +80,7 @@ public class NotificationScheduler {
 		});
 	}
 	
-	@Scheduled(cron = "0 0/15 * * * *")
+	@Scheduled(cron = "0 0/30 6 * * *")
 	public void sendPushNotificationForVLTest() {
 		logger.info("START - sendPushNotificationForVLTest");
 		taskExecutor.execute(new Runnable() {
@@ -92,7 +92,7 @@ public class NotificationScheduler {
 	   logger.info("sendPushNotificationForVLTest");	
 	}
 	
-	@Scheduled(cron = "0 0/15 * * * *")
+	@Scheduled(cron = "0 0/30 6 * * *")
 	public void sendPushNotificationForHIVReport() {
 		logger.info("START - sendPushNotificationForHIVReport");
 		taskExecutor.execute(new Runnable() {
@@ -103,7 +103,7 @@ public class NotificationScheduler {
 		});
 	}
 	
-	@Scheduled(cron = "0 0/15 * * * *")
+	@Scheduled(cron = "0 0 7 * * *")
 	public void sendPushNotificationForVLAboveThousand() {
 		logger.info("START - sendPushNotificationForVLAboveThousand");
 		taskExecutor.execute(new Runnable() {
@@ -114,7 +114,7 @@ public class NotificationScheduler {
 		});
 	}
 	
-	@Scheduled(cron = "0 0/15 * * * *")
+	@Scheduled(cron = "0 0 7 * * *")
 	public void sendPushNotificationForCD4LT350() {
 		logger.info("START - sendPushNotificationForCD4LT350");
 		taskExecutor.execute(new Runnable() {
@@ -125,7 +125,7 @@ public class NotificationScheduler {
 		});
 	}
 	
-	@Scheduled(cron = "0 0/15 * * * *")
+	@Scheduled(cron = "0 0 7 * * *")
 	public void sendPushNotificationForMonthlyAdhrenceLT80() {
 		logger.info("START - sendPushNotificationForCD4LT350");
 		taskExecutor.execute(new Runnable() {
@@ -136,7 +136,7 @@ public class NotificationScheduler {
 		});
 	}
 	
-	@Scheduled(cron = "0 0/15 * * * *")
+	@Scheduled(cron = "0 0/30 7 * * *")
 	public void sendPushNotificationForOIReporting() {
 		logger.info("START - sendPushNotificationForOIReporting");
 		taskExecutor.execute(new Runnable() {
@@ -147,7 +147,7 @@ public class NotificationScheduler {
 		});
 	}
 	
-	@Scheduled(cron = "0 0/15 * * * *")
+	@Scheduled(cron = "0 0/30 7 * * *")
 	public void sendPushNotificationForArtDispensation() {
 		logger.info("START - sendPushNotificationForArtDispensation");
 		taskExecutor.execute(new Runnable() {
@@ -158,7 +158,7 @@ public class NotificationScheduler {
 		});
 	}
 	
-	@Scheduled(cron = "0 0/15 * * * *")
+	@Scheduled(cron = "0 0/30 7 * * *")
 	public void sendPushNotificationForCommDistAtTI() {
 		logger.info("START - sendPushNotificationForCommDistAtTI");
 		taskExecutor.execute(new Runnable() {
@@ -169,7 +169,7 @@ public class NotificationScheduler {
 		});
 	}
 	
-	@Scheduled(cron = "0 0/15 * * * *")
+	@Scheduled(cron = "0 0 8 * * *")
 	public void sendPushNotificationForOstDispensation() {
 		logger.info("START - sendPushNotificationForOstDispensation");
 		taskExecutor.execute(new Runnable() {
@@ -180,7 +180,7 @@ public class NotificationScheduler {
 		});
 	}
 	
-	@Scheduled(cron = "0 0/15 * * * *")
+	@Scheduled(cron = "0 0 8 * * *")
 	public void sendPushNotificationForSyphillisTestResult() {
 		logger.info("START - sendPushNotificationForSyphillisTestResult");
 		taskExecutor.execute(new Runnable() {
@@ -191,7 +191,7 @@ public class NotificationScheduler {
 		});
 	}
 	
-	@Scheduled(cron = "0 0/15 * * * *")
+	@Scheduled(cron = "0 0 8 * * *")
 	public void sendPushNotificationForStiRtiDiagnosis() {
 		logger.info("START - sendPushNotificationForStiRtiDiagnosis");
 		taskExecutor.execute(new Runnable() {
