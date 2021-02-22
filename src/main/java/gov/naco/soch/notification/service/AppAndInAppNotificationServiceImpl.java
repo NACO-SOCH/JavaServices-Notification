@@ -65,11 +65,12 @@ public class AppAndInAppNotificationServiceImpl implements AppAndInAppNotificati
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			    PushNotificationEntity entity = new PushNotificationEntity();
-			    entity.setBeneficiaryId(Long.valueOf((Integer)map.get("beneficiaryId")));
-			    entity.setNotificationHeader((String)map.get("notificationTitle"));
-			    entity.setNotificationMessage((String)map.get("notificationMessage"));
-			    pushNotificationRepository.save(entity);
+//				This below code was commented on 22ndFeb as directed by Adarsh to not save pill reminder push notifications in Db
+//			    PushNotificationEntity entity = new PushNotificationEntity();
+//			    entity.setBeneficiaryId(Long.valueOf((Integer)map.get("beneficiaryId")));
+//			    entity.setNotificationHeader((String)map.get("notificationTitle"));
+//			    entity.setNotificationMessage((String)map.get("notificationMessage"));
+//			    pushNotificationRepository.save(entity);
 		});
 		
 	}
