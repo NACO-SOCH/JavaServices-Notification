@@ -32,6 +32,9 @@ public class NotificationScheduler {
 	@Value("${scheduler.job.notification.cleannotificationattachemnts.enabled}")
 	private boolean cleanNotificationAttachemntsEnabled;
 	
+	@Value("${scheduler.job.notification.mobileapp.pushnotifications.enabled}")
+	private boolean mobileAppPushNotificationsEnabled;
+	
 	private static final Logger logger = LoggerFactory.getLogger(NotificationScheduler.class);
 
 	@Scheduled(cron = "${delete.cron}")
@@ -61,145 +64,196 @@ public class NotificationScheduler {
 	@Scheduled(cron = "0 * * * * *")
 	public void sendPushNotificationToTheBenificiaryPillReminder() {
 		logger.info("START - sendPushNotificationToTheBenificiaryPillReminder");
-		taskExecutor.execute(new Runnable() {
-			@Override
-			public void run() {
-				sendPushNotification.sendPushNotificationToBenificiaryPillReminder();
-			}
-		});
+		if(mobileAppPushNotificationsEnabled) {
+			taskExecutor.execute(new Runnable() {
+				@Override
+				public void run() {
+					sendPushNotification.sendPushNotificationToBenificiaryPillReminder();
+				}
+			});
+		}else {
+			logger.info("JOB-->sendPushNotificationToTheBenificiaryPillReminder is disabled, so not running");
+		}
 	}
 	
 	@Scheduled(cron = "0 0/30 6 * * *")
 	public void sendPushNotificationForCD4Test() {
 		logger.info("START - sendPushNotificationForCD4Test");
+		if(mobileAppPushNotificationsEnabled) {
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForCD4Test();
 			}
 		});
+		}else {
+			logger.info("JOB-->sendPushNotificationForCD4Test is disabled, so not running");
+		}
 	}
 	
 	@Scheduled(cron = "0 0/30 6 * * *")
 	public void sendPushNotificationForVLTest() {
 		logger.info("START - sendPushNotificationForVLTest");
+		if(mobileAppPushNotificationsEnabled) {
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForVLTest();
 			}
 		});
-	   logger.info("sendPushNotificationForVLTest");	
+		}else {
+			logger.info("JOB-->sendPushNotificationForVLTest is disabled, so not running");
+		}
 	}
 	
 	@Scheduled(cron = "0 0/30 6 * * *")
 	public void sendPushNotificationForHIVReport() {
 		logger.info("START - sendPushNotificationForHIVReport");
+		if(mobileAppPushNotificationsEnabled) {
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForHIVReport();
 			}
 		});
+		}else {
+			logger.info("JOB-->sendPushNotificationForHIVReport is disabled, so not running");
+		}
 	}
 	
 	@Scheduled(cron = "0 0 7 * * *")
 	public void sendPushNotificationForVLAboveThousand() {
 		logger.info("START - sendPushNotificationForVLAboveThousand");
+		if(mobileAppPushNotificationsEnabled) {
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForVLAboveThousand();
 			}
 		});
+		}else {
+			logger.info("JOB-->sendPushNotificationForVLAboveThousand is disabled, so not running");
+		}
 	}
 	
 	@Scheduled(cron = "0 0 7 * * *")
 	public void sendPushNotificationForCD4LT350() {
 		logger.info("START - sendPushNotificationForCD4LT350");
+		if(mobileAppPushNotificationsEnabled) {
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForCD4LT350();
 			}
 		});
+		}else {
+			logger.info("JOB-->sendPushNotificationForCD4LT350 is disabled, so not running");
+		}
 	}
 	
 	@Scheduled(cron = "0 0 7 * * *")
 	public void sendPushNotificationForMonthlyAdhrenceLT80() {
 		logger.info("START - sendPushNotificationForCD4LT350");
+		if(mobileAppPushNotificationsEnabled) {
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForMonthlyAdhrenceLT80();
 			}
 		});
+		}else {
+			logger.info("JOB-->sendPushNotificationForMonthlyAdhrenceLT80 is disabled, so not running");
+		}
 	}
 	
 	@Scheduled(cron = "0 0/30 7 * * *")
 	public void sendPushNotificationForOIReporting() {
 		logger.info("START - sendPushNotificationForOIReporting");
+		if(mobileAppPushNotificationsEnabled) {
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForOIReporting();
 			}
 		});
+		}else {
+			logger.info("JOB-->sendPushNotificationForOIReporting is disabled, so not running");
+		}
 	}
 	
 	@Scheduled(cron = "0 0/30 7 * * *")
 	public void sendPushNotificationForArtDispensation() {
 		logger.info("START - sendPushNotificationForArtDispensation");
+		if(mobileAppPushNotificationsEnabled) {
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForArtDispensation();
 			}
 		});
+		}else {
+			logger.info("JOB-->sendPushNotificationForArtDispensation is disabled, so not running");
+		}
 	}
 	
 	@Scheduled(cron = "0 0/30 7 * * *")
 	public void sendPushNotificationForCommDistAtTI() {
 		logger.info("START - sendPushNotificationForCommDistAtTI");
+		if(mobileAppPushNotificationsEnabled) {
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForCommDistAtTI();
 			}
 		});
+		}else {
+			logger.info("JOB-->sendPushNotificationForCommDistAtTI is disabled, so not running");
+		}
 	}
 	
 	@Scheduled(cron = "0 0 8 * * *")
 	public void sendPushNotificationForOstDispensation() {
 		logger.info("START - sendPushNotificationForOstDispensation");
+		if(mobileAppPushNotificationsEnabled) {
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForOstDispensation();
 			}
 		});
+		}else {
+			logger.info("JOB-->sendPushNotificationForOstDispensation is disabled, so not running");
+		}
 	}
 	
 	@Scheduled(cron = "0 0 8 * * *")
 	public void sendPushNotificationForSyphillisTestResult() {
 		logger.info("START - sendPushNotificationForSyphillisTestResult");
+		if(mobileAppPushNotificationsEnabled) {
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForSyphillisTestResult();
 			}
 		});
+		}else {
+			logger.info("JOB-->sendPushNotificationForSyphillisTestResult is disabled, so not running");
+		}
 	}
 	
 	@Scheduled(cron = "0 0 8 * * *")
 	public void sendPushNotificationForStiRtiDiagnosis() {
 		logger.info("START - sendPushNotificationForStiRtiDiagnosis");
+		if(mobileAppPushNotificationsEnabled) {
 		taskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				sendPushNotification.sendPushNotificationForStiRtiDiagnosis();
 			}
 		});
+		}else {
+			logger.info("JOB-->sendPushNotificationForStiRtiDiagnosis is disabled, so not running");
+		}
 	}
 }
 
