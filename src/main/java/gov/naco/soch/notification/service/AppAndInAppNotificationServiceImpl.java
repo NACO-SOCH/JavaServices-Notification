@@ -135,11 +135,15 @@ public class AppAndInAppNotificationServiceImpl implements AppAndInAppNotificati
 	        	e.printStackTrace();
 	        }
 	        //Add notifications sent to push_notifications table
-	        PushNotificationEntity entity = new PushNotificationEntity();
-		    entity.setBeneficiaryId(Long.valueOf((Integer)messageAndTitle.get("beneficiaryId")));
-		    entity.setNotificationHeader(title);
-		    entity.setNotificationMessage(message);
-		    pushNotificationRepository.save(entity);
+	        Boolean notificationTobeSaved=(Boolean)messageAndTitle.get("isNotification");
+	        log.info("Push Notification to be saved: {}", notificationTobeSaved);
+	        if(notificationTobeSaved) {
+		        PushNotificationEntity entity = new PushNotificationEntity();
+			    entity.setBeneficiaryId(Long.valueOf((Integer)messageAndTitle.get("beneficiaryId")));
+			    entity.setNotificationHeader(title);
+			    entity.setNotificationMessage(message);
+			    pushNotificationRepository.save(entity);
+	        }
 			
 		}
 		
