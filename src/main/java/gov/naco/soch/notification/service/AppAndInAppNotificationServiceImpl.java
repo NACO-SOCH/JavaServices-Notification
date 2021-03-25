@@ -136,7 +136,7 @@ public class AppAndInAppNotificationServiceImpl implements AppAndInAppNotificati
 	        }
 	        //Add notifications sent to push_notifications table
 	        Boolean notificationTobeSaved=(Boolean)messageAndTitle.get("isNotification");
-	        log.info("Push Notification to be saved: {}", notificationTobeSaved);
+	        //log.info("Push Notification to be saved: {}", notificationTobeSaved);
 	        if(notificationTobeSaved) {
 		        PushNotificationEntity entity = new PushNotificationEntity();
 			    entity.setBeneficiaryId(Long.valueOf((Integer)messageAndTitle.get("beneficiaryId")));

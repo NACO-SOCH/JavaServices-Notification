@@ -76,7 +76,7 @@ public class NotificationScheduler {
 		}
 	}
 	
-	@Scheduled(cron = "0 0/5 * * * *")
+	@Scheduled(cron = "0 30 6 * * *")
 	public void sendPushNotificationForCD4Test() {
 		logger.info("START - sendPushNotificationForCD4Test");
 		if(mobileAppPushNotificationsEnabled) {
@@ -91,7 +91,7 @@ public class NotificationScheduler {
 		}
 	}
 	
-	@Scheduled(cron = "0 0/5 * * * *")
+	@Scheduled(cron = "0 30 6 * * *")
 	public void sendPushNotificationForVLTest() {
 		logger.info("START - sendPushNotificationForVLTest");
 		if(mobileAppPushNotificationsEnabled) {
@@ -106,7 +106,7 @@ public class NotificationScheduler {
 		}
 	}
 	
-	@Scheduled(cron = "0 0/5 * * * *")
+	@Scheduled(cron = "0 30 6 * * *")
 	public void sendPushNotificationForHIVReport() {
 		logger.info("START - sendPushNotificationForHIVReport");
 		if(mobileAppPushNotificationsEnabled) {
@@ -121,7 +121,7 @@ public class NotificationScheduler {
 		}
 	}
 	
-	@Scheduled(cron = "0 0/5 * * * *")
+	@Scheduled(cron = "0 0 7 * * *")
 	public void sendPushNotificationForVLAboveThousand() {
 		logger.info("START - sendPushNotificationForVLAboveThousand");
 		if(mobileAppPushNotificationsEnabled) {
@@ -136,7 +136,7 @@ public class NotificationScheduler {
 		}
 	}
 	
-	@Scheduled(cron = "0 0/5 * * * *")
+	@Scheduled(cron = "0 0 7 * * *")
 	public void sendPushNotificationForCD4LT350() {
 		logger.info("START - sendPushNotificationForCD4LT350");
 		if(mobileAppPushNotificationsEnabled) {
@@ -151,7 +151,7 @@ public class NotificationScheduler {
 		}
 	}
 	
-	@Scheduled(cron = "0 0/5 * * * *")
+	@Scheduled(cron = "0 0 7 * * *")
 	public void sendPushNotificationForMonthlyAdhrenceLT80() {
 		logger.info("START - sendPushNotificationForMonthlyAdhrenceLT80");
 		if(mobileAppPushNotificationsEnabled) {
@@ -166,7 +166,7 @@ public class NotificationScheduler {
 		}
 	}
 	
-	@Scheduled(cron = "0 0/5 * * * *")
+	@Scheduled(cron = "0 30 7 * * *")
 	public void sendPushNotificationForOIReporting() {
 		logger.info("START - sendPushNotificationForOIReporting");
 		if(mobileAppPushNotificationsEnabled) {
@@ -181,7 +181,7 @@ public class NotificationScheduler {
 		}
 	}
 	
-	@Scheduled(cron = "0 0/5 * * * *")
+	@Scheduled(cron = "0 30 7 * * *")
 	public void sendPushNotificationForArtDispensation() {
 		logger.info("START - sendPushNotificationForArtDispensation");
 		if(mobileAppPushNotificationsEnabled) {
@@ -196,7 +196,7 @@ public class NotificationScheduler {
 		}
 	}
 	
-	@Scheduled(cron = "0 0/5 * * * *")
+	@Scheduled(cron = "0 30 7 * * *")
 	public void sendPushNotificationForCommDistAtTI() {
 		logger.info("START - sendPushNotificationForCommDistAtTI");
 		if(mobileAppPushNotificationsEnabled) {
@@ -211,7 +211,7 @@ public class NotificationScheduler {
 		}
 	}
 	
-	@Scheduled(cron = "0 0/5 * * * *")
+	@Scheduled(cron = "0 0 6 * * *")
 	public void sendPushNotificationForOstDispensation() {
 		logger.info("START - sendPushNotificationForOstDispensation");
 		if(mobileAppPushNotificationsEnabled) {
@@ -226,7 +226,7 @@ public class NotificationScheduler {
 		}
 	}
 	
-	@Scheduled(cron = "0 0/5 * * * *")
+	@Scheduled(cron = "0 0 6 * * *")
 	public void sendPushNotificationForSyphillisTestResult() {
 		logger.info("START - sendPushNotificationForSyphillisTestResult");
 		if(mobileAppPushNotificationsEnabled) {
@@ -241,7 +241,7 @@ public class NotificationScheduler {
 		}
 	}
 	
-	@Scheduled(cron = "0 0/5 * * * *")
+	@Scheduled(cron = "0 0 6 * * *")
 	public void sendPushNotificationForStiRtiDiagnosis() {
 		logger.info("START - sendPushNotificationForStiRtiDiagnosis");
 		if(mobileAppPushNotificationsEnabled) {
