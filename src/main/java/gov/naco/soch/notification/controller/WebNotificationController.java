@@ -2,6 +2,8 @@ package gov.naco.soch.notification.controller;
 
 
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import gov.naco.soch.dto.WebNotificationListDto;
 import gov.naco.soch.dto.WebUserNotificationDto;
+import gov.naco.soch.notification.model.NotificationCountResponse;
 import gov.naco.soch.notification.service.WebUserNotificationService;
 import gov.naco.soch.util.CommonConstants;
 /**
@@ -82,16 +85,31 @@ public class WebNotificationController {
 		}
 	}
 	
+//	@GetMapping("/count")
+//	public Integer getNotificationCount(@RequestParam Integer userId) {
+//		try {
+//			
+//		return webUserNotificationService.getWebNotificationCount(userId);
+//		}
+//		catch (Exception e) {
+//			logger.error("Exception :"+e.getMessage());
+//		}
+//		return null;
+//
+//	}
+	
 	@GetMapping("/count")
-	public Integer getNotificationCount(@RequestParam Integer userId) {
+	public NotificationCountResponse getNotificationCount(@RequestParam Integer userId) {
+		NotificationCountResponse notificationCountResponse=null;//=new NotificationCountResponse();
+		
 		try {
-		return webUserNotificationService.getWebNotificationCount(userId);
+			Integer count=webUserNotificationService.getWebNotificationCount(userId);
+			notificationCountResponse=new NotificationCountResponse(count,LocalDateTime.now());
 		}
 		catch (Exception e) {
 			logger.error("Exception :"+e.getMessage());
 		}
-		return null;
-
+		return notificationCountResponse;
 	}
 	
 
