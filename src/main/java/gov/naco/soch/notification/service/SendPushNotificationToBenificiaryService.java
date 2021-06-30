@@ -128,7 +128,7 @@ public class SendPushNotificationToBenificiaryService {
 		logger.info("Inside sendPushNotificationForSyphillisTestResult: Syphillis Test Result");
 		List<Map<String,Object>> mapList=pillReminderTimeRepository.sendPushNotificationForSyphillisTestResult();
 		if(CollectionUtils.isEmpty(mapList)) {
-			logger.info("Push Notification Data for Syphillis Test Result for the date: {}", LocalDate.now());
+			logger.info("Push Notification Data for Syphillis Test Result is empty for the date: {}", LocalDate.now());
 		}else {
 			appAndInAppNotificationService.sendPushNotificationToMultipleUser(mapList);
 		}		
@@ -137,7 +137,7 @@ public class SendPushNotificationToBenificiaryService {
 		logger.info("Inside sendPushNotificationForStiRtiDiagnosis: Sti Rti Diagnosis");
 		List<Map<String,Object>> mapList=pillReminderTimeRepository.sendPushNotificationForStiRtiDiagnosis();
 		if(CollectionUtils.isEmpty(mapList)) {
-			logger.info("Push Notification Data for Sti Rti Diagnosis for the date: {}", LocalDate.now());
+			logger.info("Push Notification Data for Sti Rti Diagnosis is empty for the date: {}", LocalDate.now());
 		}else {
 			appAndInAppNotificationService.sendPushNotificationToMultipleUser(mapList);
 		}

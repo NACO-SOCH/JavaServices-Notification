@@ -27,6 +27,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Message.Builder;
 import com.google.firebase.messaging.MulticastMessage;
+import com.google.firebase.messaging.SendResponse;
 
 import gov.naco.soch.notification.model.PushDevice;
 import gov.naco.soch.notification.model.PushNotification;
@@ -367,14 +368,23 @@ public class PushNotificationService {
 				log.info(" Push-Notification Third Party Api Invoked"); 
 				BatchResponse response = FirebaseMessaging.getInstance().sendAll(messageBatch);
 				// Response is a message ID string.
+				log.info("Response(Failure Count) received from FCM: " + response.getFailureCount());
+				log.info("Response(Success Count) received from FCM: " + response.getSuccessCount());
+				for(SendResponse sendResponse: response.getResponses()) {
+					log.info("Send Response: isSuccessful --> "+ sendResponse.isSuccessful());
+					log.info("Send Response: Message Id --> "+ sendResponse.getMessageId());
+					log.info("Send Response: getException.errorCode --> "+ sendResponse.getException().getErrorCode());
+					log.info("Send Response: getException.getLocalizedMessage --> "+ sendResponse.getException().getLocalizedMessage());
+				}
 				log.info("Successfully sent push message: " + response);
 				
 			} catch (Exception e) {
-				log.info("Successfully sent push message: " + e);
+				log.error("Exception:  " + e.getLocalizedMessage());
+				log.error("Error in sending push notification from FCM: " + e);
 				throw e;
 			}
 			
-			log.info("Exist pushNotificationToFCM(-) of PushNotificationService");
+			log.info("Exit pushNotificationToFCM(-) of PushNotificationService");
 			
 		}
 		
