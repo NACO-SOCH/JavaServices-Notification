@@ -373,8 +373,10 @@ public class PushNotificationService {
 				for(SendResponse sendResponse: response.getResponses()) {
 					log.info("Send Response: isSuccessful --> "+ sendResponse.isSuccessful());
 					log.info("Send Response: Message Id --> "+ sendResponse.getMessageId());
-					log.info("Send Response: getException.errorCode --> "+ sendResponse.getException().getErrorCode());
-					log.info("Send Response: getException.getLocalizedMessage --> "+ sendResponse.getException().getLocalizedMessage());
+					if(sendResponse.getException() != null) {
+						log.info("Send Response: getException.errorCode --> "+ sendResponse.getException().getErrorCode());
+						log.info("Send Response: getException.getLocalizedMessage --> "+ sendResponse.getException().getLocalizedMessage());
+					}
 				}
 				log.info("Successfully sent push message: " + response);
 				
