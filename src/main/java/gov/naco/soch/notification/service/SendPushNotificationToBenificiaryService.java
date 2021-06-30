@@ -1,5 +1,6 @@
 package gov.naco.soch.notification.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +12,6 @@ import org.springframework.util.CollectionUtils;
 import org.threeten.bp.LocalDate;
 
 import gov.naco.soch.repository.PillReminderTimeRepository;
-import gov.naco.soch.scheduler.NotificationScheduler;
 
 @Service
 public class SendPushNotificationToBenificiaryService {
@@ -24,7 +24,12 @@ public class SendPushNotificationToBenificiaryService {
 	
 	public void sendPushNotificationToBenificiaryPillReminder() {
 		List<Map<String,Object>> mapList=pillReminderTimeRepository.getBeneficiaryPillReminderDetailForReminder();
-		appAndInAppNotificationService.sendPushNotificationToBenificiary(mapList);
+		if(CollectionUtils.isEmpty(mapList)) {
+			logger.info("Push Notification Data for Pill Reminder is empty for the date time: {}", LocalDateTime.now());
+		}else {
+			appAndInAppNotificationService.sendPushNotificationToBenificiary(mapList);
+		}
+		
 		
 	}
 	public void sendPushNotificationForCD4Test() {
